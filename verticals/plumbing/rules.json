@@ -1,0 +1,20 @@
+{
+  "emergency_keywords": [
+    "burst pipe", "flooding", "gas smell", "sewer backup",
+    "no hot water", "water leak", "frozen pipes", "pipe burst",
+    "water damage", "backed up drain", "sewage"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["burst pipe", "flooding", "gas smell", "sewer backup"],
+    "urgent": ["no hot water", "water leak", "frozen pipes", "backed up drain"],
+    "standard": ["drain cleaning", "faucet repair", "toilet repair", "maintenance"],
+    "low": ["general inquiry", "pricing question", "consultation"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": true,
+    "booking_buffer_minutes": 30,
+    "max_daily_bookings": 12,
+    "default_appointment_duration_minutes": 90
+  }
+}

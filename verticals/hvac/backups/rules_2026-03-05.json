@@ -1,0 +1,21 @@
+{
+  "emergency_keywords": [
+    "no heat", "no cooling", "gas smell", "gas leak",
+    "carbon monoxide", "CO detector", "CO alarm",
+    "flooding", "water leak from unit", "sparking",
+    "smoke from furnace", "burning smell"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["gas smell", "CO detector", "no heat below 40F"],
+    "urgent": ["no heat", "no cooling", "water leak"],
+    "standard": ["maintenance", "tune-up", "inspection"],
+    "low": ["general inquiry", "pricing question"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": true,
+    "booking_buffer_minutes": 30,
+    "max_daily_bookings": 12,
+    "default_appointment_duration_minutes": 120
+  }
+}

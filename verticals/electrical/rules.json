@@ -1,0 +1,20 @@
+{
+  "emergency_keywords": [
+    "electrical fire", "sparking", "burning smell", "exposed wires",
+    "power outage", "breaker tripping", "shock", "shocked",
+    "sparking outlets", "smoke", "melting wires", "fire"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["electrical fire", "sparking outlets", "exposed wires", "burning smell"],
+    "urgent": ["breaker tripping", "power outage", "shock", "sparking"],
+    "standard": ["panel upgrade", "wiring", "lighting install", "outlets/switches"],
+    "low": ["general inquiry", "pricing question", "consultation"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": true,
+    "booking_buffer_minutes": 30,
+    "max_daily_bookings": 10,
+    "default_appointment_duration_minutes": 90
+  }
+}

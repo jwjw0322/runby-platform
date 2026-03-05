@@ -1,0 +1,18 @@
+{
+  "emergency_keywords": [],
+  "emergency_action": "none",
+  "triage_priority": {
+    "urgent": ["ready to buy", "wants to start today", "urgent need"],
+    "standard": ["interested in demo", "pricing inquiry", "product questions"],
+    "low": ["just browsing", "not interested", "future consideration"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": false,
+    "booking_buffer_minutes": 0,
+    "max_daily_bookings": 20,
+    "default_appointment_duration_minutes": 15,
+    "required_fields": ["contact_name", "contact_email", "contact_phone", "business_name", "preferred_demo_time"],
+    "optional_fields": ["business_type", "num_employees", "current_pain_points", "interest_level", "timezone"],
+    "interest_levels": ["hot", "warm", "cold"]
+  }
+}

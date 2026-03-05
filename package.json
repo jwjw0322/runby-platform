@@ -1,0 +1,21 @@
+{
+  "name": "runby-platform",
+  "version": "1.0.0",
+  "description": "RunBy AI receptionist platform",
+  "main": "core/server.js",
+  "scripts": {
+    "start": "node core/server.js",
+    "dev": "nodemon core/server.js",
+    "create-assistant": "node core/vapi-config.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "node-cron": "^4.2.1",
+    "twilio": "^4.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

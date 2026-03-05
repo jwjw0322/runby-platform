@@ -1,0 +1,40 @@
+{
+  "scenarios": [
+    {
+      "name": "New customer booking",
+      "caller": "Hi, I need to get my AC looked at. It's blowing warm air.",
+      "expected_classification": "booking",
+      "expected_actions": ["get_name", "get_phone", "ask_system_type", "offer_appointment"]
+    },
+    {
+      "name": "Emergency - no heat",
+      "caller": "We have no heat and it's freezing in here. The furnace just stopped.",
+      "expected_classification": "emergency",
+      "expected_actions": ["ask_safety", "mark_urgent", "alert_owner"]
+    },
+    {
+      "name": "Emergency - gas smell",
+      "caller": "I smell gas near my furnace. What should I do?",
+      "expected_classification": "emergency",
+      "expected_actions": ["tell_leave_house", "tell_call_911", "alert_owner"]
+    },
+    {
+      "name": "Pricing inquiry",
+      "caller": "How much does a new AC unit cost to install?",
+      "expected_classification": "estimate",
+      "expected_actions": ["deflect_pricing", "offer_quote_appointment"]
+    },
+    {
+      "name": "Estimate follow-up",
+      "caller": "Hi, I got an estimate last week for duct cleaning. I'm ready to schedule.",
+      "expected_classification": "booking",
+      "expected_actions": ["reference_estimate", "offer_appointment", "confirm_booking"]
+    },
+    {
+      "name": "After hours call",
+      "caller": "Are you guys open? I need a tune-up scheduled.",
+      "expected_classification": "booking",
+      "expected_actions": ["inform_hours", "offer_next_available"]
+    }
+  ]
+}
