@@ -1,5 +1,5 @@
 // core/chief-agent-officer.js
-// The CAO — Chief Agent Officer
+// Ross — Chief Agent Officer
 // Oversees all RunBy agents, monitors performance, and sends a daily executive briefing
 // Runs daily at 6:00 AM before all optimizer agents
 
@@ -13,12 +13,12 @@ const SENDGRID_API_URL = 'https://api.sendgrid.com/v3/mail/send';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
 /**
- * Main CAO function — gathers intelligence from all agents and sends a morning briefing
+ * Main Ross function — gathers intelligence from all agents and sends a morning briefing
  */
 async function runDailyBriefing() {
   console.log(`\n========================================`);
-  console.log(`[CAO] Chief Agent Officer — Daily Briefing`);
-  console.log(`[CAO] ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}`);
+  console.log(`[Ross] Chief Agent Officer — Daily Briefing`);
+  console.log(`[Ross] ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}`);
   console.log(`========================================\n`);
 
   try {
@@ -59,17 +59,17 @@ async function runDailyBriefing() {
     // 5. Snapshot all vertical files into their backups directories
     backupVerticalFiles(verticals);
 
-    console.log(`[CAO] Daily briefing complete and sent`);
+    console.log(`[Ross] Daily briefing complete and sent`);
     return { status: 'sent', summary: briefing.executive_summary };
 
   } catch (error) {
-    console.error(`[CAO] Error running daily briefing:`, error.message);
+    console.error(`[Ross] Error running daily briefing:`, error.message);
 
     // Even if something fails, try to send an error alert
     try {
       await sendErrorAlert(error.message);
     } catch (e) {
-      console.error(`[CAO] Failed to send error alert:`, e.message);
+      console.error(`[Ross] Failed to send error alert:`, e.message);
     }
 
     return { status: 'error', reason: error.message };
@@ -275,7 +275,7 @@ async function gatherInvoiceMetrics() {
  * Check health of all agent files
  */
 // Internal RunBy verticals that don't use per-client template variables
-const INTERNAL_VERTICALS = ['onboarding', 'sales'];
+const INTERNAL_VERTICALS = ['onboarding', 'sales', 'marketing'];
 
 function checkAgentHealth(verticals) {
   const health = {};
@@ -310,7 +310,7 @@ function checkAgentHealth(verticals) {
         checks.templateVarsIntact = true; // N/A for internal verticals
       } else {
         const prompt = fs.readFileSync(promptPath, 'utf8');
-        const requiredVars = ['{{business_name}}', '{{services}}', '{{business_hours}}', '{{service_area}}', '{{current_date}}', '{{current_time}}'];
+        const requiredVars = ['{{ai_name}}', '{{business_name}}', '{{services}}', '{{business_hours}}', '{{service_area}}', '{{current_date}}', '{{current_time}}'];
         checks.templateVarsIntact = requiredVars.every(v => prompt.includes(v));
       }
     }
@@ -359,7 +359,7 @@ function checkForNewVerticals() {
  * Ask Claude to generate an executive briefing from all the gathered data
  */
 async function generateBriefingWithClaude(data) {
-  const systemPrompt = `You are the Chief Agent Officer (CAO) for RunBy, an AI receptionist platform. You oversee a fleet of AI optimization agents that improve call-handling prompts daily.
+  const systemPrompt = `You are Ross, the Chief Agent Officer for RunBy, an AI receptionist platform. You oversee a fleet of AI optimization agents that improve call-handling prompts daily.
 
 Write a concise, executive-quality morning briefing for the CEO (Jon). Be direct, highlight what matters, flag problems, and celebrate wins. Use a professional but warm tone.
 
@@ -443,7 +443,7 @@ Respond in JSON format:
     if (jsonMatch) return JSON.parse(jsonMatch[0]);
     return { executive_summary: 'Briefing generation failed', sections: [], action_items: [], health_score: 0, mood: 'critical' };
   } catch (e) {
-    console.error(`[CAO] Failed to parse briefing:`, e.message);
+    console.error(`[Ross] Failed to parse briefing:`, e.message);
     return { executive_summary: 'Briefing generation failed — parse error', sections: [], action_items: [], health_score: 0, mood: 'critical' };
   }
 }
@@ -530,7 +530,7 @@ async function sendBriefingEmail(briefing, rawData) {
     }],
     from: {
       email: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
-      name: 'RunBy CAO',
+      name: 'Ross @ RunBy',
     },
     content: [{
       type: 'text/html',
@@ -538,7 +538,7 @@ async function sendBriefingEmail(briefing, rawData) {
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 680px; margin: 0 auto; background: #f3f4f6;">
           <!-- Header -->
           <div style="background: linear-gradient(135deg, #1E3A5F 0%, #1a56db 100%); color: white; padding: 30px; text-align: center;">
-            <h1 style="margin: 0 0 4px 0; font-size: 22px;">RunBy — Chief Agent Officer</h1>
+            <h1 style="margin: 0 0 4px 0; font-size: 22px;">RunBy — Ross</h1>
             <p style="margin: 0; opacity: 0.8; font-size: 14px;">Daily Briefing — ${today}</p>
             <div style="margin-top: 12px;">
               <span style="background: ${mood.color}; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: bold;">
@@ -572,7 +572,7 @@ async function sendBriefingEmail(briefing, rawData) {
 
             <!-- Footer -->
             <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
-              <p style="margin: 0;">RunBy AI Platform — Chief Agent Officer Report</p>
+              <p style="margin: 0;">RunBy AI Platform — Ross (Chief Agent Officer)</p>
               <p style="margin: 4px 0 0 0;">Generated at ${new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York' })} ET</p>
               <p style="margin: 4px 0 0 0; font-style: italic;">Next optimizer agents run at 6:00–6:40 AM ET</p>
             </div>
@@ -593,15 +593,15 @@ async function sendBriefingEmail(briefing, rawData) {
 
   if (!response.ok) {
     const errorBody = await response.text();
-    throw new Error(`SendGrid CAO briefing error ${response.status}: ${errorBody}`);
+    throw new Error(`SendGrid Ross briefing error ${response.status}: ${errorBody}`);
   }
 
-  console.log(`[CAO] Briefing email sent to ${adminEmail}`);
+  console.log(`[Ross] Briefing email sent to ${adminEmail}`);
   return true;
 }
 
 /**
- * Send an error alert if the CAO itself fails
+ * Send an error alert if Ross itself fails
  */
 async function sendErrorAlert(errorMessage) {
   const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan.williams0322@gmail.com';
@@ -609,18 +609,18 @@ async function sendErrorAlert(errorMessage) {
   const emailContent = {
     personalizations: [{
       to: [{ email: adminEmail }],
-      subject: `🔴 RunBy CAO Error — Daily Briefing Failed`,
+      subject: `🔴 RunBy — Ross Error — Daily Briefing Failed`,
     }],
     from: {
       email: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
-      name: 'RunBy CAO',
+      name: 'Ross @ RunBy',
     },
     content: [{
       type: 'text/html',
       value: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px;">
-          <h2 style="color: #DC2626;">CAO Daily Briefing Failed</h2>
-          <p>The Chief Agent Officer encountered an error while generating today's briefing:</p>
+          <h2 style="color: #DC2626;">Ross — Daily Briefing Failed</h2>
+          <p>Ross encountered an error while generating today's briefing:</p>
           <div style="background: #FEE2E2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 16px; margin: 16px 0;">
             <code style="color: #991B1B;">${errorMessage}</code>
           </div>
@@ -653,7 +653,7 @@ function saveBriefing(briefing) {
     path.join(reportsDir, `briefing_${timestamp}.json`),
     JSON.stringify(briefing, null, 2)
   );
-  console.log(`[CAO] Briefing saved to reports/cao/briefing_${timestamp}.json`);
+  console.log(`[Ross] Briefing saved to reports/cao/briefing_${timestamp}.json`);
 }
 
 /**
@@ -697,14 +697,14 @@ function backupVerticalFiles(verticals) {
       }
     }
 
-    console.log(`[CAO] Backed up ${vertical} → backups/${timestamp}`);
+    console.log(`[Ross] Backed up ${vertical} → backups/${timestamp}`);
   }
 }
 
 // CLI support
 if (require.main === module) {
   runDailyBriefing().then(result => {
-    console.log('\n[CAO] Result:', JSON.stringify(result, null, 2));
+    console.log('\n[Ross] Result:', JSON.stringify(result, null, 2));
     process.exit(0);
   }).catch(err => {
     console.error(err);

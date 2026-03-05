@@ -2,17 +2,19 @@
   "emergency_keywords": [],
   "emergency_action": "none",
   "triage_priority": {
-    "urgent": ["ready to buy", "wants to start today", "urgent need"],
-    "standard": ["interested in demo", "pricing inquiry", "product questions"],
-    "low": ["just browsing", "not interested", "future consideration"]
+    "urgent": ["ready to sign up", "wants to start today", "referral from existing client"],
+    "standard": ["interested in demo", "pricing inquiry", "product questions", "callback request"],
+    "low": ["just browsing", "not interested", "future consideration", "voicemail"]
   },
   "business_rules": {
     "after_hours_emergencies": false,
     "booking_buffer_minutes": 0,
     "max_daily_bookings": 20,
     "default_appointment_duration_minutes": 15,
-    "required_fields": ["contact_name", "contact_email", "contact_phone", "business_name", "preferred_demo_time"],
-    "optional_fields": ["business_type", "num_employees", "current_pain_points", "interest_level", "timezone"],
-    "interest_levels": ["hot", "warm", "cold"]
+    "required_fields_demo": ["contact_name", "contact_email", "contact_phone", "business_name", "preferred_demo_time"],
+    "required_fields_transfer": ["contact_name", "contact_phone", "business_name"],
+    "optional_fields": ["business_type", "num_employees", "current_pain_points", "interest_level", "timezone", "spanish_speaking_customers", "source"],
+    "interest_levels": ["hot", "warm", "cold"],
+    "lead_sources": ["inbound_call", "outbound_cold", "referral", "website_lead", "social_media"]
   }
 }

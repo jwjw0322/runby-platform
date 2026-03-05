@@ -1,0 +1,39 @@
+{
+  "emergency_keywords": [],
+  "emergency_action": "none",
+  "triage_priority": {
+    "urgent": ["brand crisis", "negative press", "viral complaint", "legal concern"],
+    "standard": ["campaign launch", "content creation", "lead outreach", "newsletter"],
+    "low": ["content idea", "social scheduling", "analytics review"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": false,
+    "max_cold_emails_per_prospect": 3,
+    "cold_email_sequence_days": [0, 3, 14],
+    "best_send_times": {
+      "days": ["Tuesday", "Wednesday", "Thursday"],
+      "hours": "7-9 AM local time"
+    },
+    "content_cadence": {
+      "social_posts_per_day": 1,
+      "blog_posts_per_week": 1,
+      "newsletters_per_month": 2,
+      "case_studies_per_month": 1
+    },
+    "target_verticals": ["hvac", "plumbing", "electrical", "roofing", "medspa", "general-contractor"],
+    "platforms": ["facebook", "instagram", "linkedin", "tiktok"],
+    "brand_voice": "confident, helpful, relatable — never desperate or salesy",
+    "metrics_targets": {
+      "email_open_rate": "25%",
+      "email_reply_rate": "5%",
+      "email_demo_conversion": "2%",
+      "social_engagement_rate": "3%"
+    },
+    "compliance": {
+      "respect_optouts": true,
+      "no_competitor_naming": true,
+      "no_fabricated_stats": true,
+      "no_guaranteed_results": true
+    }
+  }
+}
