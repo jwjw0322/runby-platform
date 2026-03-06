@@ -9,9 +9,10 @@ const rules = require('../verticals/hvac/rules.json');
  * Handle end-of-call report from Vapi
  * @param {object} event - Vapi webhook event
  * @param {object|null} clientData - { client, config } from client-lookup, or null for fallback
+ * @param {string} agentType - 'client', 'onboarding', or 'sales'
  */
-async function handleCallEnd(event, clientData = null) {
-  console.log('\n[handleCallEnd] Processing call end event...');
+async function handleCallEnd(event, clientData = null, agentType = 'client') {
+  console.log(`\n[handleCallEnd] Processing ${agentType} call end event...`);
 
   const report = event.message || event;
 
@@ -40,7 +41,7 @@ async function handleCallEnd(event, clientData = null) {
 
   // Get client_id — from dynamic lookup or fallback to TEST_CLIENT_ID
   const clientId = clientData?.client?.id || process.env.TEST_CLIENT_ID;
-  const verticalId = clientData?.client?.vertical_id || 'hvac';
+  const verticalId = clientData?.client?.vertical_id || (agentType === 'client' ? 'hvac' : 'internal');
   const businessName = clientData?.config?.business_name || 'Unknown';
 
   if (!clientId) {
@@ -49,11 +50,24 @@ async function handleCallEnd(event, clientData = null) {
     throw err;
   }
 
-  console.log(`[Call End] Client: ${businessName} (${clientId})`);
+  console.log(`[Call End] Agent: ${agentType} | Client: ${businessName} (${clientId})`);
   console.log(`[Call End] Caller: ${callerNumber}, Duration: ${duration}s`);
 
-  const classification = classifyCall(transcript);
-  const isEmergency = detectEmergency(transcript);
+  // Classify based on agent type
+  let classification;
+  let outcome;
+  if (agentType === 'onboarding') {
+    classification = 'onboarding';
+    outcome = transcript.toLowerCase().includes('saved') || transcript.toLowerCase().includes('information') ? 'resolved' : 'incomplete';
+  } else if (agentType === 'sales') {
+    classification = 'sales';
+    outcome = transcript.toLowerCase().includes('demo') || transcript.toLowerCase().includes('book') ? 'booked' : 'resolved';
+  } else {
+    classification = classifyCall(transcript);
+    outcome = detectEmergency(transcript) ? 'transferred' : 'resolved';
+  }
+
+  const isEmergency = agentType === 'client' && detectEmergency(transcript);
 
   // 1. Log the interaction
   const { data: interaction, error: interactionError } = await supabase
@@ -66,9 +80,9 @@ async function handleCallEnd(event, clientData = null) {
       caller_number: callerNumber,
       caller_name: callerName,
       classification,
-      outcome: isEmergency ? 'transferred' : 'resolved',
+      outcome,
       duration_seconds: Math.round(duration),
-      source: 'direct',
+      source: agentType,  // 'client', 'onboarding', or 'sales'
     })
     .select()
     .single();

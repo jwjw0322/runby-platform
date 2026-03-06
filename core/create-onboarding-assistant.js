@@ -77,7 +77,7 @@ async function createOnboardingAssistant() {
     },
     voice: {
       provider: 'vapi',
-      voiceId: 'Aura',  // Different voice from client assistants (Emma)
+      voiceId: 'Emma',
     },
     firstMessage: "Hi there! Thanks for calling RunBy. I'm here to help you get your AI receptionist set up. It'll take about five to ten minutes — I just need to grab some details about your business. Sound good?",
     endCallMessage: "Thanks so much for signing up with RunBy! You should receive a confirmation email shortly. Our team will review everything and get you all set up. Have a great day!",
@@ -126,7 +126,7 @@ async function createOnboardingAssistant() {
   console.log('========================================');
   console.log(`  Assistant ID: ${assistant.id}`);
   console.log(`  Tool: save_onboarding_data`);
-  console.log(`  Voice: Aura`);
+  console.log(`  Voice: Emma`);
   console.log(`  Max duration: 15 minutes`);
 
   if (!assistantId || assistantId.includes('xxxx')) {

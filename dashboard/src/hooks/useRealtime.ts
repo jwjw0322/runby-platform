@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import type { QueryKey } from '@tanstack/react-query'
 import { supabase } from '@/config/supabase'
 import { useClient } from '@/context/ClientContext'
 
@@ -7,7 +8,7 @@ import { useClient } from '@/context/ClientContext'
  * Subscribe to Supabase realtime changes for a table.
  * Automatically invalidates the matching TanStack Query key on INSERT/UPDATE.
  */
-export function useRealtime(table: string, queryKey: string[]) {
+export function useRealtime(table: string, queryKey: QueryKey) {
   const queryClient = useQueryClient()
   const { clientId } = useClient()
 

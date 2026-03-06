@@ -71,6 +71,35 @@ app.post('/webhook/vapi', async (req, res) => {
       const onboardingPhone = process.env.VAPI_ONBOARDING_PHONE_NUMBER;
       if (onboardingPhone && phoneNumber === onboardingPhone) {
         console.log('[Vapi] Routing to onboarding assistant');
+
+        // Check if the caller is already an existing client
+        const callerNumber = event.message?.call?.customer?.number
+          || event.call?.customer?.number
+          || event.customer?.number
+          || null;
+
+        if (callerNumber) {
+          const existingClient = await getClientByPhone(callerNumber);
+          if (existingClient && existingClient.client?.status === 'active') {
+            console.log(`[Vapi] Caller ${callerNumber} is already an active client: ${existingClient.client.business_name}`);
+            // Return a custom assistant that tells them they're already set up
+            const alreadyOnboardedPrompt = `You are a friendly RunBy assistant. The caller is already an active RunBy client. Their business is "${existingClient.client.business_name}". Let them know they're already set up and their AI receptionist is active on ${existingClient.client.twilio_number || 'their dedicated number'}. If they need help with their account, ask them to email jonathan@runbyai.co or call their dedicated RunBy number to test their AI. If they want to onboard a DIFFERENT business, proceed with the normal onboarding flow by collecting the new business details.`;
+            res.json({
+              assistant: {
+                model: {
+                  provider: 'anthropic',
+                  model: 'claude-sonnet-4-5-20250929',
+                  systemPrompt: alreadyOnboardedPrompt,
+                  temperature: 0.3,
+                },
+                voice: { provider: 'vapi', voiceId: 'Emma' },
+                firstMessage: `Hi there! I see you're already set up with RunBy for ${existingClient.client.business_name}. Are you looking to onboard a different business, or did you need help with your existing account?`,
+              },
+            });
+            return;
+          }
+        }
+
         const onboardingAssistantId = process.env.VAPI_ONBOARDING_ASSISTANT_ID;
         if (onboardingAssistantId) {
           res.json({ assistantId: onboardingAssistantId });
@@ -151,11 +180,48 @@ app.post('/webhook/vapi', async (req, res) => {
 
     // ============================================
     // END OF CALL — log with correct client_id
+    // Route onboarding/sales calls to the RunBy internal client
     // ============================================
     if (eventType === 'end-of-call-report' || eventType === 'call.ended' || eventType === 'call_ended') {
       const phoneNumber = extractPhoneNumber(event);
-      const clientData = phoneNumber ? await getClientByPhone(phoneNumber) : null;
-      await handleCallEnd(event, clientData);
+      const onboardingPhone = process.env.VAPI_ONBOARDING_PHONE_NUMBER;
+      const salesPhone = process.env.VAPI_SALES_PHONE_NUMBER;
+
+      let clientData = null;
+      let agentType = 'client'; // default
+
+      if (onboardingPhone && phoneNumber === onboardingPhone) {
+        // Onboarding call — use RunBy internal client
+        agentType = 'onboarding';
+        clientData = {
+          client: {
+            id: '00000000-0000-0000-0000-000000000001',
+            business_name: 'RunBy AI',
+            vertical_id: 'internal',
+            status: 'active',
+          },
+          config: { business_name: 'RunBy AI' },
+        };
+        console.log('[Vapi] End-of-call: onboarding agent');
+      } else if (salesPhone && phoneNumber === salesPhone) {
+        // Sales call — use RunBy internal client
+        agentType = 'sales';
+        clientData = {
+          client: {
+            id: '00000000-0000-0000-0000-000000000001',
+            business_name: 'RunBy AI',
+            vertical_id: 'internal',
+            status: 'active',
+          },
+          config: { business_name: 'RunBy AI' },
+        };
+        console.log('[Vapi] End-of-call: sales agent');
+      } else {
+        // Regular client call
+        clientData = phoneNumber ? await getClientByPhone(phoneNumber) : null;
+      }
+
+      await handleCallEnd(event, clientData, agentType);
     }
 
     // ============================================

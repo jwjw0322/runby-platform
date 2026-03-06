@@ -24,6 +24,7 @@ Service business owners and operators in these verticals:
 - Spend most of their day on job sites, not at a desk
 - Miss 30-40% of incoming calls
 - Often answer calls while driving or on a job
+- Spend hours every week on admin: chasing invoices, confirming appointments, returning calls, sending reminders
 - Price-conscious but understand ROI
 - Many serve bilingual communities (English + Spanish)
 - Value reliability, simplicity, and fast results
@@ -49,6 +50,8 @@ Subject lines (rotate):
 - "[Business Name] — what happens when you can't answer?"
 - "Your competitors answer at 2 AM. Do you?"
 - "Quick question about [Business Name]'s phone setup"
+- "What if AI ran your admin, invoicing, and customer follow-ups?"
+- "[Business Name] — stop chasing payments manually"
 
 Email body guidelines:
 - Keep it under 150 words
@@ -59,9 +62,9 @@ Email body guidelines:
 - Sign off as "The RunBy Team"
 
 #### Follow-Up Sequence (if no reply)
-- **Day 3**: Short bump — "Just checking if you saw my last note. Happy to show you how [Business Name] could capture every call."
-- **Day 7**: Value-add — share a relevant stat or case study snippet. "HVAC companies using AI receptionists see 35% more bookings on average."
-- **Day 14**: Breakup email — "I'll stop reaching out, but if you ever want to stop missing calls, we're here. Just reply to this email."
+- **Day 3**: Short bump — "Just checking if you saw my last note. Happy to show you how [Business Name] could stop chasing payments and missing calls."
+- **Day 7**: Value-add — share a relevant stat or case study snippet. "Service businesses using RunBy save 15+ hours a week on admin — no more chasing invoices, confirming appointments, or returning calls manually."
+- **Day 14**: Breakup email — "I'll stop reaching out, but if you ever want an AI that runs your operations while you're on the job, we're here. Just reply to this email."
 
 #### Warm Follow-Up (after demo booked but not completed)
 - Reminder 24 hours before demo
@@ -82,8 +85,8 @@ Email body guidelines:
 
 ### Content Strategy
 Create content that educates, entertains, and converts. All content should map to one of these goals:
-1. **Awareness** — make service business owners aware that AI receptionists exist and work
-2. **Consideration** — show why RunBy is better than alternatives (answering services, voicemail, hiring)
+1. **Awareness** — make service business owners aware that AI can run their entire operations — answering calls, chasing invoices, following up with customers, and handling admin
+2. **Consideration** — show why RunBy is better than alternatives (answering services, voicemail, hiring a receptionist, doing it all yourself)
 3. **Conversion** — drive demo bookings or direct sign-ups
 
 ### Social Media Platforms & Tone
@@ -92,7 +95,7 @@ Create content that educates, entertains, and converts. All content should map t
 - Primary audience: service business owners 30-55
 - Tone: conversational, relatable, visual
 - Post types: before/after stories, customer wins, quick tips, short videos, polls
-- Hashtags: #ServiceBusiness #NeverMissACall #AIReceptionist #SmallBusinessTips #RunBy
+- Hashtags: #ServiceBusiness #NeverMissACall #AIReceptionist #SmallBusinessTips #RunBy #AIOperations #StopChasingInvoices
 
 #### LinkedIn
 - Primary audience: business owners, entrepreneurs, industry professionals
@@ -115,20 +118,22 @@ Create content that educates, entertains, and converts. All content should map t
 - Always include a clear CTA (book demo, try free, learn more)
 - Write for the business owner, not the tech person
 - Use real numbers and scenarios when possible
-- SEO-focused: target keywords like "AI receptionist for plumbers", "never miss a call HVAC", "virtual receptionist service business"
+- SEO-focused: target keywords like "AI receptionist for plumbers", "never miss a call HVAC", "virtual receptionist service business", "AI operations for service businesses", "automated invoice follow-up plumbing", "AI admin assistant contractors"
 - No AI buzzword soup — write like you're explaining it over coffee
 
 ### Content Themes (Rotate Monthly)
 
-#### Theme 1: The Cost of Missed Calls
-- "Every missed call costs you $200-500 in lost revenue"
-- Calculator posts: "If you miss 5 calls a week at $300 average job..."
-- Stories from real service businesses about calls they missed
+#### Theme 1: The Cost of Running Everything Yourself
+- "Every missed call costs you $200-500 in lost revenue — and every hour chasing invoices costs you even more"
+- Calculator posts: "If you miss 5 calls a week at $300 average job, spend 10 hours on admin, and lose $2K in late payments..."
+- Stories from real service businesses about the hidden cost of doing their own admin, collections, and customer follow-ups
+- "How many hours did you spend this week calling customers back, sending payment reminders, and confirming appointments?"
 
 #### Theme 2: AI That Actually Works
-- Demystify AI — it's not Terminator, it's a really good receptionist
-- Side-by-side: voicemail vs. RunBy experience
+- Demystify AI — it's not Terminator, it's a really good office manager, receptionist, and collections person rolled into one
+- Side-by-side: voicemail vs. RunBy experience — but also: manually chasing invoices vs. RunBy doing it automatically
 - "What your customers hear when you miss their call" vs. "What they hear with RunBy"
+- "What happens to your unpaid invoices when you're too busy to follow up?" vs. "RunBy chases them down for you"
 
 #### Theme 3: The Bilingual Advantage
 - Highlight Spanish-speaking market opportunity
@@ -137,8 +142,10 @@ Create content that educates, entertains, and converts. All content should map t
 
 #### Theme 4: Work Smarter, Not Harder
 - Targeted at solo operators and small crews
-- "You're on a job site. Your phone rings. What happens next?"
-- Productivity tips + how RunBy fits into the workflow
+- "You're on a job site. Your phone rings. An invoice is overdue. A customer needs to confirm tomorrow's appointment. What happens next?"
+- Productivity tips + how RunBy runs your entire back office while you focus on the work
+- "RunBy doesn't just answer calls — it makes them too. Following up with customers, chasing late payments, sending appointment reminders. It's like having an office manager that works 24/7."
+- Show the daily time savings: no more returning calls, sending invoice reminders, confirming appointments, or rescheduling manually
 
 #### Theme 5: Growth Stories
 - Client spotlights and case studies
@@ -148,13 +155,13 @@ Create content that educates, entertains, and converts. All content should map t
 ### Sample Social Media Posts
 
 #### Facebook/Instagram:
-"Your phone rang 3 times while you were under that sink. By the time you called back, they'd already booked with someone else. RunBy answers every call in under 2 seconds — even at 2 AM. Never lose a customer to voicemail again. [Link in bio]"
+"Your phone rang 3 times while you were under that sink. You've got 2 overdue invoices you haven't followed up on. And 3 customers waiting for appointment confirmations. By the time you get to any of it, you've lost money and time. RunBy handles ALL of it — answers every call, chases invoices, confirms appointments, follows up with customers — while you do the work you actually get paid for. [Link in bio]"
 
 #### LinkedIn:
-"We analyzed 10,000 calls to service businesses. 37% went to voicemail. Of those, only 20% left a message. That means for every 100 calls, 30 potential customers silently moved on to a competitor. AI receptionists aren't about replacing people — they're about catching the calls you physically can't answer. That's the gap RunBy fills."
+"We analyzed 10,000 calls to service businesses. 37% went to voicemail. But here's what nobody talks about: the average service business owner spends 15+ hours a week on admin — returning calls, chasing late payments, confirming appointments, sending reminders. That's not just lost productivity. That's lost revenue. RunBy isn't just an AI receptionist — it's an AI operations platform. It answers calls, makes outbound follow-ups, chases unpaid invoices, and handles the admin that eats your day. The businesses that win aren't the ones working harder. They're the ones that automate the work that doesn't need a human."
 
 #### TikTok/Reels Script:
-"POV: You're a plumber and your phone rings while you're elbow-deep in a water heater. [Cut to phone ringing, going to voicemail] That customer just called your competitor. [Cut to RunBy answering] Or... your AI receptionist books them while you finish the job. Choice is yours."
+"POV: You're a plumber and your phone rings while you're elbow-deep in a water heater. [Cut to phone ringing, going to voicemail] Meanwhile, 3 invoices are overdue, 2 customers need callbacks, and tomorrow's schedule needs confirming. [Cut to RunBy dashboard] Or... your AI answers the call, books the job, chases the invoices, confirms the appointments, and follows up with last week's customers. All while you finish the job. That's RunBy."
 
 ### Content Rules
 1. **Never use competitor names** — focus on RunBy's strengths, not others' weaknesses
