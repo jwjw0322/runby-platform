@@ -456,7 +456,7 @@ Respond in JSON format:
  * Send the morning briefing email
  */
 async function sendBriefingEmail(briefing, rawData) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan.williams0322@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
 
   // Mood emoji and color
   const moodConfig = {
@@ -604,7 +604,7 @@ async function sendBriefingEmail(briefing, rawData) {
  * Send an error alert if Ross itself fails
  */
 async function sendErrorAlert(errorMessage) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan.williams0322@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
 
   const emailContent = {
     personalizations: [{

@@ -331,7 +331,7 @@ async function sendOnboardingNotification({
   timezone,
   preferred_area_code,
 }) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan.williams0322@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
 
   const servicesStr = Array.isArray(services) ? services.join(', ') : services;
 
@@ -462,7 +462,7 @@ async function sendDemoNotification({
   timezone,
   call_direction,
 }) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan.williams0322@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
 
   // Interest level badge colors
   const interestColors = { hot: '#DC2626', warm: '#F59E0B', cold: '#6B7280' };

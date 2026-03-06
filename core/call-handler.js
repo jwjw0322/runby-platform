@@ -44,8 +44,9 @@ async function handleCallEnd(event, clientData = null) {
   const businessName = clientData?.config?.business_name || 'Unknown';
 
   if (!clientId) {
-    console.error('[Call End] ERROR: No client ID found — cannot write to database!');
-    return;
+    const err = new Error('[Call End] No client ID found — cannot write to database!');
+    console.error(err.message);
+    throw err;
   }
 
   console.log(`[Call End] Client: ${businessName} (${clientId})`);
@@ -73,8 +74,9 @@ async function handleCallEnd(event, clientData = null) {
     .single();
 
   if (interactionError) {
-    console.error('[DB Error] Interaction insert:', JSON.stringify(interactionError, null, 2));
-    return;
+    const err = new Error(`[DB Error] Interaction insert failed: ${JSON.stringify(interactionError)}`);
+    console.error(err.message);
+    throw err;
   }
 
   console.log(`[DB] Interaction logged: ${interaction.id}`);

@@ -41,7 +41,23 @@ app.post('/webhook/vapi', async (req, res) => {
   const event = req.body;
   const eventType = event.type || event.message?.type || 'unknown';
 
-  console.log(`\n[Vapi Webhook] Event type: ${eventType}`);
+  // ── Diagnostic logging ──
+  console.log(`\n========== [Vapi Webhook] ==========`);
+  console.log(`[Vapi Webhook] Event type: ${eventType}`);
+  console.log(`[Vapi Webhook] Top-level keys: ${Object.keys(event).join(', ')}`);
+  if (event.message) console.log(`[Vapi Webhook] message keys: ${Object.keys(event.message).join(', ')}`);
+  const phone = extractPhoneNumber(event);
+  console.log(`[Vapi Webhook] Extracted phone: ${phone || 'NONE'}`);
+  console.log(`====================================\n`);
+
+  // Store for diagnostic endpoint
+  lastWebhookPayload = {
+    received_at: new Date().toISOString(),
+    event_type: eventType,
+    top_level_keys: Object.keys(event),
+    phone_extracted: phone,
+    raw_body: event,
+  };
 
   try {
     // ============================================
@@ -251,6 +267,60 @@ app.post('/api/bookings/:id/complete', async (req, res) => {
     console.error('[Booking Complete Error]', error.message);
     res.status(500).json({ error: error.message });
   }
+});
+
+// ── Diagnostic: test Supabase write ──
+app.get('/test/supabase-write', async (req, res) => {
+  const supabase = require('./supabase');
+  const testClientId = process.env.TEST_CLIENT_ID;
+
+  console.log(`\n[Test] Attempting Supabase write with client_id: ${testClientId}`);
+  console.log(`[Test] SUPABASE_URL: ${process.env.SUPABASE_URL}`);
+
+  const { data, error } = await supabase
+    .from('interactions')
+    .insert({
+      client_id: testClientId,
+      vertical_id: 'hvac',
+      type: 'call',
+      direction: 'inbound',
+      caller_number: '+10000000000',
+      caller_name: 'DIAG_TEST',
+      classification: 'test',
+      outcome: 'resolved',
+      duration_seconds: 0,
+      source: 'diagnostic',
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[Test] INSERT FAILED:', JSON.stringify(error));
+    return res.json({ success: false, error });
+  }
+
+  console.log('[Test] INSERT SUCCESS:', data.id);
+
+  // Clean up
+  await supabase.from('interactions').delete().eq('id', data.id);
+  console.log('[Test] Cleaned up test row');
+
+  res.json({ success: true, message: 'Supabase write works!', test_id: data.id });
+});
+
+// ── Diagnostic: echo last webhook payload ──
+let lastWebhookPayload = null;
+app.get('/test/last-webhook', (req, res) => {
+  if (!lastWebhookPayload) {
+    return res.json({ message: 'No webhook received yet. Trigger a call and check again.' });
+  }
+  res.json({
+    received_at: lastWebhookPayload.received_at,
+    event_type: lastWebhookPayload.event_type,
+    top_level_keys: lastWebhookPayload.top_level_keys,
+    phone_extracted: lastWebhookPayload.phone_extracted,
+    raw_body: lastWebhookPayload.raw_body,
+  });
 });
 
 // Initialize follow-up email scheduler

@@ -1,6 +1,6 @@
 const cron = require('node-cron');
-const { supabase } = require('./supabase');
-const { sendEmail } = require('./email-sender');
+const supabase = require('./supabase');
+const { sendFollowUpEmail: sendFollowUpEmailVia } = require('./email-sender');
 
 /**
  * Follow-up Email Scheduler
@@ -62,11 +62,11 @@ async function sendFollowUpEmail(booking) {
     <p>Best regards,<br/>Your Service Team</p>
   `;
 
-  // Send the email
-  await sendEmail({
+  // Send the email via email-sender's sendFollowUpEmail
+  await sendFollowUpEmailVia({
     to: client_email,
-    subject,
-    html: htmlContent,
+    customer_name: client_email,
+    service_type,
   });
 
   // Update follow_up_sent_at timestamp
