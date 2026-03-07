@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunBy AI — Phone Demo Animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0a0a14;
+    --dark-2: #0f0f1e;
+    --dark-3: #141428;
+    --accent: #e94560;
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+    --green: #10b981;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.12);
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Background dot grid */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  /* Ambient glow */
+  .ambient {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+  }
+  .ambient-1 {
+    top: -10%; left: 20%;
+    background: rgba(67, 97, 238, 0.08);
+    animation: ambientDrift 12s ease-in-out infinite alternate;
+  }
+  .ambient-2 {
+    bottom: -10%; right: 20%;
+    background: rgba(233, 69, 96, 0.06);
+    animation: ambientDrift 15s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes ambientDrift {
+    from { transform: translate(0, 0); }
+    to { transform: translate(30px, -20px); }
+  }
+
+  /* Main container */
+  .scene {
+    position: relative;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+  }
+
+  /* Branding */
+  .brand {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+  .brand span { color: var(--accent); }
+
+  .brand-sub {
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Phone mockup */
+  .phone {
+    position: relative;
+    width: 320px;
+    background: var(--dark-2);
+    border: 1px solid var(--border-hover);
+    border-radius: 36px;
+    padding: 14px;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.5),
+      0 0 80px rgba(233, 69, 96, 0.06),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    animation: phoneAppear 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+
+  @keyframes phoneAppear {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Notch */
+  .phone-notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: var(--dark-2);
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+
+  .phone-notch::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+
+  .screen {
+    background: var(--dark-3);
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .status-bar .time { letter-spacing: 0.02em; }
+  .status-icons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .status-icons svg { width: 14px; height: 14px; color: var(--white); }
+
+  /* Chat header */
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-arrow {
+    color: var(--accent);
+    display: flex;
+  }
+  .back-arrow svg { width: 20px; height: 20px; }
+
+  .chat-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #c23152);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.3);
+  }
+  .chat-avatar svg { width: 18px; height: 18px; color: white; }
+
+  .chat-info {
+    flex: 1;
+  }
+  .chat-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .chat-status {
+    font-size: 0.7rem;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .chat-status::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .chat-call-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(233, 69, 96, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+  .chat-call-btn svg { width: 15px; height: 15px; }
+
+  /* Messages area */
+  .messages {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .msg-time {
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--gray);
+    margin: 4px 0;
+    opacity: 0;
+  }
+
+  .bubble {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  .bubble.in {
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  .bubble.out {
+    background: linear-gradient(135deg, var(--accent), #c23152);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 12px rgba(233, 69, 96, 0.2);
+  }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+    max-width: 60px;
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  .typing-indicator .dot {
+    width: 6px; height: 6px;
+    background: var(--gray);
+    border-radius: 50%;
+    animation: typingBounce 1.2s ease-in-out infinite;
+  }
+  .typing-indicator .dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing-indicator .dot:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* Input bar */
+  .input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .input-field {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    color: var(--gray);
+  }
+
+  .send-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.3);
+  }
+  .send-btn svg { width: 14px; height: 14px; color: white; }
+
+  /* Floating badges */
+  .float-badge {
+    position: absolute;
+    background: rgba(15, 15, 30, 0.92);
+    border: 1px solid var(--border-hover);
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    opacity: 0;
+    z-index: 5;
+  }
+
+  .float-badge svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .float-badge.badge-booked {
+    top: 12%;
+    left: -60%;
+    color: var(--green);
+  }
+  .float-badge.badge-followup {
+    bottom: 28%;
+    right: -55%;
+    color: var(--accent);
+  }
+  .float-badge.badge-calendar {
+    top: 35%;
+    right: -55%;
+    color: var(--blue);
+  }
+
+  /* Bottom tagline */
+  .tagline {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--gray);
+    text-align: center;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+  }
+  .tagline strong { color: var(--white); font-weight: 600; }
+
+  /* ─── ANIMATION ENGINE ─── */
+  .animate-in {
+    animation: msgAppear 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes msgAppear {
+    from { opacity: 0; transform: translateY(12px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-time {
+    animation: timeAppear 0.3s ease-out forwards;
+  }
+  @keyframes timeAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-out {
+    animation: msgDisappear 0.4s ease-in forwards;
+  }
+  @keyframes msgDisappear {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  }
+
+  .badge-animate-in {
+    animation: badgeAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes badgeAppear {
+    from { opacity: 0; transform: translateY(10px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .badge-float {
+    animation: badgeFloat 3s ease-in-out infinite alternate;
+  }
+  @keyframes badgeFloat {
+    from { transform: translateY(0); }
+    to { transform: translateY(-6px); }
+  }
+
+  .badge-animate-out {
+    animation: badgeDisappear 0.4s ease-in forwards;
+  }
+  @keyframes badgeDisappear {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .scene { width: 90vw; }
+    .phone { width: 280px; }
+    .screen { min-height: 440px; }
+    .float-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<div class="scene">
+  <div class="brand">Run<span>By</span></div>
+  <div class="brand-sub">Your AI Employee. Always On.</div>
+
+  <div class="phone">
+    <div class="phone-notch"></div>
+
+    <!-- Floating notification badges -->
+    <div class="float-badge badge-booked" id="badge-booked">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Appointment booked
+    </div>
+    <div class="float-badge badge-calendar" id="badge-calendar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Calendar synced
+    </div>
+    <div class="float-badge badge-followup" id="badge-followup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Confirmation sent
+    </div>
+
+    <div class="screen">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time" id="clock">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2a7.074 7.074 0 0110 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+        </div>
+      </div>
+
+      <!-- Chat header -->
+      <div class="chat-header">
+        <div class="back-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="chat-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 00-3 3v4a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <div class="chat-info">
+          <div class="chat-name">RunBy AI</div>
+          <div class="chat-status">Active now</div>
+        </div>
+        <div class="chat-call-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages" id="messages"></div>
+
+      <!-- Input bar -->
+      <div class="input-bar">
+        <div class="input-field">Type a message...</div>
+        <div class="send-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tagline">AI staff that handles calls, bookings & follow-ups <strong>24/7</strong></div>
+</div>
+
+<script>
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+    document.getElementById('clock').textContent =
+      (h > 12 ? h - 12 : h || 12) + ':' + (m < 10 ? '0' : '') + m;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  // Conversation scenarios
+  const conversations = [
+    {
+      title: 'HVAC Emergency',
+      messages: [
+        { type: 'time', text: 'Today, 9:41 AM' },
+        { type: 'in', text: "Hi, my AC just stopped working and it's 95 degrees. Can someone come out today?" },
+        { type: 'typing', duration: 1200 },
+        { type: 'out', text: "I'm so sorry to hear that! I have an emergency slot available today at 2:00 PM. Would that work for you?" },
+        { type: 'in', text: "Yes, 2 PM is perfect. Please book it." },
+        { type: 'typing', duration: 1000 },
+        { type: 'out', text: "Done! You're booked for today at 2:00 PM. I've sent a confirmation text to your phone with all the details." },
+        { type: 'badge', id: 'badge-booked', delay: 200 },
+        { type: 'badge', id: 'badge-calendar', delay: 600 },
+        { type: 'in', text: "Wow, that was fast. Thank you!" },
+        { type: 'typing', duration: 800 },
+        { type: 'out', text: "Happy to help! Our tech will call 30 min before arrival. Stay cool!" },
+        { type: 'badge', id: 'badge-followup', delay: 400 },
+      ]
+    },
+    {
+      title: 'Plumbing Quote',
+      messages: [
+        { type: 'time', text: 'Today, 11:23 AM' },
+        { type: 'in', text: "I've got a leaking pipe under my kitchen sink. How much would a repair cost?" },
+        { type: 'typing', duration: 1400 },
+        { type: 'out', text: "Kitchen sink leaks typically run $150-$300 depending on the issue. We can give you an exact quote on-site — no charge for the estimate. Want me to schedule one?" },
+        { type: 'in', text: "Sure, what do you have available this week?" },
+        { type: 'typing', duration: 1200 },
+        { type: 'out', text: "I have openings Wednesday at 10 AM or Thursday at 3 PM. Which works better for you?" },
+        { type: 'in', text: "Wednesday 10 AM works great." },
+        { type: 'typing', duration: 1000 },
+        { type: 'out', text: "All set! Wednesday at 10 AM for a free kitchen leak estimate. You'll get a reminder text tomorrow." },
+        { type: 'badge', id: 'badge-booked', delay: 200 },
+        { type: 'badge', id: 'badge-calendar', delay: 600 },
+        { type: 'badge', id: 'badge-followup', delay: 1000 },
+      ]
+    },
+    {
+      title: 'After Hours',
+      messages: [
+        { type: 'time', text: 'Today, 11:47 PM' },
+        { type: 'in', text: "Is anyone there? I know it's late but my water heater is making weird noises." },
+        { type: 'typing', duration: 1000 },
+        { type: 'out', text: "Hi! I'm here 24/7. A noisy water heater can mean sediment buildup or a failing element. Is the water still heating properly?" },
+        { type: 'in', text: "It's lukewarm at best. And there's a slight smell." },
+        { type: 'typing', duration: 1200 },
+        { type: 'out', text: "That sounds like it needs attention soon. I've flagged this as priority. Our earliest opening is tomorrow at 8 AM — want me to book it?" },
+        { type: 'in', text: "Yes please, first thing tomorrow." },
+        { type: 'typing', duration: 800 },
+        { type: 'out', text: "Booked! Tomorrow at 8:00 AM. In the meantime, you can turn off the heater's gas valve as a precaution. I'll text you a reminder at 7:30 AM." },
+        { type: 'badge', id: 'badge-booked', delay: 200 },
+        { type: 'badge', id: 'badge-calendar', delay: 500 },
+        { type: 'in', text: "Thank you so much. Didn't expect anyone to answer at midnight!" },
+        { type: 'typing', duration: 800 },
+        { type: 'out', text: "That's what we're here for! Sleep well, we've got this handled." },
+        { type: 'badge', id: 'badge-followup', delay: 300 },
+      ]
+    }
+  ];
+
+  const messagesEl = document.getElementById('messages');
+  let currentConvo = 0;
+
+  function clearMessages() {
+    return new Promise(resolve => {
+      const children = messagesEl.children;
+      if (children.length === 0) return resolve();
+
+      // Fade out all messages
+      Array.from(children).forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('animate-out');
+        }, i * 40);
+      });
+
+      // Hide badges
+      ['badge-booked', 'badge-calendar', 'badge-followup'].forEach(id => {
+        const badge = document.getElementById(id);
+        badge.classList.remove('badge-animate-in', 'badge-float');
+        badge.classList.add('badge-animate-out');
+      });
+
+      setTimeout(() => {
+        messagesEl.innerHTML = '';
+        ['badge-booked', 'badge-calendar', 'badge-followup'].forEach(id => {
+          const badge = document.getElementById(id);
+          badge.classList.remove('badge-animate-out');
+          badge.style.opacity = '0';
+        });
+        resolve();
+      }, children.length * 40 + 500);
+    });
+  }
+
+  function addMessage(msg) {
+    return new Promise(resolve => {
+      if (msg.type === 'time') {
+        const el = document.createElement('div');
+        el.className = 'msg-time';
+        el.textContent = msg.text;
+        messagesEl.appendChild(el);
+        setTimeout(() => {
+          el.classList.add('animate-time');
+          resolve();
+        }, 200);
+      }
+      else if (msg.type === 'typing') {
+        const el = document.createElement('div');
+        el.className = 'typing-indicator';
+        el.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+        messagesEl.appendChild(el);
+        setTimeout(() => el.classList.add('animate-in'), 50);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        setTimeout(() => {
+          el.remove();
+          resolve();
+        }, msg.duration || 1200);
+      }
+      else if (msg.type === 'badge') {
+        const badge = document.getElementById(msg.id);
+        setTimeout(() => {
+          badge.style.opacity = '';
+          badge.classList.remove('badge-animate-out');
+          badge.classList.add('badge-animate-in');
+          setTimeout(() => {
+            badge.classList.add('badge-float');
+          }, 600);
+          resolve();
+        }, msg.delay || 0);
+      }
+      else {
+        const el = document.createElement('div');
+        el.className = `bubble ${msg.type === 'in' ? 'in' : 'out'}`;
+        el.textContent = msg.text;
+        messagesEl.appendChild(el);
+        setTimeout(() => {
+          el.classList.add('animate-in');
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+          resolve();
+        }, 80);
+      }
+    });
+  }
+
+  async function playConversation(convo) {
+    for (const msg of convo.messages) {
+      await addMessage(msg);
+      // Pause between messages
+      if (msg.type === 'in' || msg.type === 'out') {
+        await new Promise(r => setTimeout(r, 800));
+      } else if (msg.type === 'time') {
+        await new Promise(r => setTimeout(r, 600));
+      } else if (msg.type === 'badge') {
+        await new Promise(r => setTimeout(r, 200));
+      }
+    }
+  }
+
+  async function runLoop() {
+    while (true) {
+      const convo = conversations[currentConvo % conversations.length];
+      await playConversation(convo);
+
+      // Hold on final message
+      await new Promise(r => setTimeout(r, 4000));
+
+      // Clear and move to next
+      await clearMessages();
+      await new Promise(r => setTimeout(r, 1000));
+
+      currentConvo++;
+    }
+  }
+
+  // Start after page load
+  setTimeout(runLoop, 1200);
+</script>
+
+</body>
+</html>
