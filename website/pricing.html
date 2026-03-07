@@ -698,7 +698,41 @@
   // ─────────────────────────────────────────
   // STRIPE CHECKOUT
   // ─────────────────────────────────────────
-  const API_URL = 'https://api.runbyai.co';
+  const API_URLS = [
+    'https://api.runbyai.co',
+    'https://runby-platform-production.up.railway.app',
+  ];
+
+  async function createCheckoutSession(plan, interval) {
+    let lastError = null;
+
+    for (const baseUrl of API_URLS) {
+      try {
+        const response = await fetch(`${baseUrl}/api/create-checkout-session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan, interval }),
+        });
+
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (_) {
+          data = {};
+        }
+
+        if (response.ok) {
+          return data;
+        }
+
+        lastError = new Error(data.error || `Checkout request failed (${response.status})`);
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    throw lastError || new Error('Unable to connect to payment system');
+  }
 
   async function handleSubscribe(plan) {
     const btn = document.querySelector(`[data-plan="${plan}"] .price-btn`);
@@ -709,13 +743,7 @@
     const interval = isAnnual ? 'annual' : 'monthly';
 
     try {
-      const response = await fetch(`${API_URL}/api/create-checkout-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan, interval }),
-      });
-
-      const data = await response.json();
+      const data = await createCheckoutSession(plan, interval);
 
       if (data.url) {
         window.location.href = data.url;

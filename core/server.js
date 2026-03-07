@@ -3,17 +3,49 @@
 
 require('dotenv').config();
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const { handleCallEnd, handleTranscript } = require('./call-handler');
 const { bookAppointment, checkAvailability } = require('./booking-handler');
 const { getAssistantConfig } = require('./prompt-builder');
 const { getClientByPhone } = require('./client-lookup');
 const { saveOnboardingData } = require('./onboarding-handler');
 const { bookDemo } = require('./sales-handler');
+const { transferToJon, lookupClientAccount, checkBillingStatus } = require('./support-handler');
 const { syncInvoices } = require('./invoice-handler');
 require('./scheduler'); // Initialize cron jobs on server start
 const { initFollowUpScheduler } = require('./follow-up-scheduler'); // Initialize follow-up email scheduler
 
 const app = express();
+
+// Allow website frontend to call API endpoints (e.g. Stripe checkout)
+const allowedOrigins = new Set([
+  'https://runbyai.co',
+  'https://www.runbyai.co',
+  'https://api.runbyai.co',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173',
+]);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Stripe-Signature');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
@@ -83,7 +115,7 @@ app.post('/webhook/vapi', async (req, res) => {
           if (existingClient && existingClient.client?.status === 'active') {
             console.log(`[Vapi] Caller ${callerNumber} is already an active client: ${existingClient.client.business_name}`);
             // Return a custom assistant that tells them they're already set up
-            const alreadyOnboardedPrompt = `You are a friendly RunBy assistant. The caller is already an active RunBy client. Their business is "${existingClient.client.business_name}". Let them know they're already set up and their AI receptionist is active on ${existingClient.client.twilio_number || 'their dedicated number'}. If they need help with their account, ask them to email jonathan@runbyai.co or call their dedicated RunBy number to test their AI. If they want to onboard a DIFFERENT business, proceed with the normal onboarding flow by collecting the new business details.`;
+            const alreadyOnboardedPrompt = `You are a friendly RunBy assistant. The caller is already an active RunBy client. Their business is "${existingClient.client.business_name}". Let them know they're already set up and their AI staff is active on ${existingClient.client.twilio_number || 'their dedicated number'}. If they need help with their account, ask them to email jonathan@runbyai.co or call their dedicated RunBy number to test their AI. If they want to onboard a DIFFERENT business, proceed with the normal onboarding flow by collecting the new business details.`;
             res.json({
               assistant: {
                 model: {
@@ -110,17 +142,63 @@ app.post('/webhook/vapi', async (req, res) => {
         return;
       }
 
-      // Check if this is the sales phone number
+      // Check if this is the sales/support phone number
       const salesPhone = process.env.VAPI_SALES_PHONE_NUMBER;
       if (salesPhone && phoneNumber === salesPhone) {
-        console.log('[Vapi] Routing to sales assistant');
+        console.log('[Vapi] Routing to sales/support assistant');
+
         const salesAssistantId = process.env.VAPI_SALES_ASSISTANT_ID;
-        if (salesAssistantId) {
-          res.json({ assistantId: salesAssistantId });
-        } else {
+        if (!salesAssistantId || salesAssistantId.includes('xxxx') || salesAssistantId === 'your-sales-assistant-id-here') {
           console.error('[Vapi] VAPI_SALES_ASSISTANT_ID not set in .env');
           res.json({ error: 'Sales assistant not configured' });
+          return;
         }
+
+        // Extract the caller's phone number to check if they're an existing client
+        const callerNumber = event.message?.call?.customer?.number
+          || event.call?.customer?.number
+          || event.customer?.number
+          || null;
+
+        let callerContext = 'new_prospect';
+        let overrideFirstMessage = "Hey there, thanks for calling RunBy! We help service businesses stop losing revenue and get their time back with AI-powered staff. Who am I speaking with today?";
+
+        if (callerNumber) {
+          const existingClient = await getClientByPhone(callerNumber);
+          if (existingClient && existingClient.client?.status === 'active') {
+            const clientName = existingClient.client.name || '';
+            const businessName = existingClient.client.business_name || '';
+            callerContext = `existing_client:${clientName}:${businessName}`;
+            overrideFirstMessage = clientName
+              ? `Hi ${clientName}! Thanks for calling RunBy. I can see you're calling from ${businessName}. How can I help you today?`
+              : `Hi there! Thanks for calling RunBy. I can see you're calling from ${businessName}. How can I help you today?`;
+            console.log(`[Vapi] Caller is existing client: ${businessName} (${callerNumber})`);
+          }
+        }
+
+        // Load the sales/support prompt and inject caller context
+        let salesPrompt;
+        try {
+          salesPrompt = fs.readFileSync(path.join(__dirname, '..', 'verticals', 'sales', 'prompt.md'), 'utf8');
+          const objectionsPlaybook = fs.readFileSync(path.join(__dirname, '..', 'verticals', 'sales', 'objections.md'), 'utf8');
+          salesPrompt = salesPrompt + '\n\n---\n\n' + objectionsPlaybook;
+          salesPrompt = salesPrompt.replace(/\{\{caller_context\}\}/g, callerContext);
+        } catch (e) {
+          console.error('[Vapi] Failed to load sales prompt:', e.message);
+          // Fallback: just use the assistant without overrides
+          res.json({ assistantId: salesAssistantId });
+          return;
+        }
+
+        res.json({
+          assistantId: salesAssistantId,
+          assistantOverrides: {
+            model: {
+              systemPrompt: salesPrompt,
+            },
+            firstMessage: overrideFirstMessage,
+          },
+        });
         return;
       }
 
@@ -282,6 +360,23 @@ async function handleFunctionCall(functionCall, clientData) {
     case 'book_demo':
       return await bookDemo(args);
 
+    case 'transfer_to_jon':
+      return await transferToJon(args.reason, {
+        caller_name: args.caller_name,
+        caller_phone: args.caller_phone,
+        caller_email: args.caller_email,
+        client_id: clientId,
+      });
+
+    case 'lookup_client_account': {
+      // Get the caller's phone to look up their account
+      const callerPhone = clientData?.client?.phone || clientData?.client?.twilio_number || null;
+      return await lookupClientAccount(callerPhone, args.query_type);
+    }
+
+    case 'check_billing_status':
+      return await checkBillingStatus(clientId, args.include_history || false);
+
     default:
       console.log(`[Function Call] Unknown function: ${name}`);
       return { success: false, message: `Unknown function: ${name}` };
@@ -333,6 +428,361 @@ app.post('/api/bookings/:id/complete', async (req, res) => {
     console.error('[Booking Complete Error]', error.message);
     res.status(500).json({ error: error.message });
   }
+});
+
+// ============================================
+// STRIPE CHECKOUT — subscription payments
+// ============================================
+
+// Price map: plan → { monthly: price_id, annual: price_id }
+// These Stripe Price IDs must be created in your Stripe Dashboard
+const STRIPE_PRICES = {
+  starter: {
+    monthly: process.env.STRIPE_PRICE_STARTER_MONTHLY || '',
+    annual: process.env.STRIPE_PRICE_STARTER_ANNUAL || '',
+    name: 'RunBy Starter',
+  },
+  growth: {
+    monthly: process.env.STRIPE_PRICE_GROWTH_MONTHLY || '',
+    annual: process.env.STRIPE_PRICE_GROWTH_ANNUAL || '',
+    name: 'RunBy Growth',
+  },
+  pro: {
+    monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || '',
+    annual: process.env.STRIPE_PRICE_PRO_ANNUAL || '',
+    name: 'RunBy Pro',
+  },
+};
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeKey) {
+      console.error('[Stripe] STRIPE_SECRET_KEY not set');
+      return res.status(500).json({ error: 'Payment system not configured. Please call us at (786) 733-2209.' });
+    }
+
+    const stripe = require('stripe')(stripeKey);
+
+    const { plan, interval } = req.body;
+
+    if (!plan || !STRIPE_PRICES[plan]) {
+      return res.status(400).json({ error: 'Invalid plan selected.' });
+    }
+
+    const billing = interval === 'annual' ? 'annual' : 'monthly';
+    const priceId = STRIPE_PRICES[plan][billing];
+
+    if (!priceId) {
+      console.error(`[Stripe] No price ID configured for ${plan}/${billing}`);
+      return res.status(500).json({ error: 'This plan is not yet available for purchase. Please call us at (786) 733-2209.' });
+    }
+
+    const websiteUrl = process.env.WEBSITE_URL || 'https://runbyai.co';
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [{
+        price: priceId,
+        quantity: 1,
+      }],
+      subscription_data: {
+        trial_period_days: 14,
+        metadata: {
+          plan,
+          interval: billing,
+        },
+      },
+      allow_promotion_codes: true,
+      billing_address_collection: 'required',
+      phone_number_collection: { enabled: true },
+      customer_creation: 'always',
+      success_url: `${websiteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${websiteUrl}/pricing`,
+      metadata: {
+        plan,
+        interval: billing,
+      },
+    });
+
+    console.log(`[Stripe] Checkout session created: ${session.id} (${plan}/${billing})`);
+    res.json({ url: session.url });
+
+  } catch (error) {
+    console.error('[Stripe] Checkout error:', error.message);
+    res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
+  }
+});
+
+// Stripe webhook for subscription events (payment confirmations, cancellations, etc.)
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!stripeKey || !webhookSecret) {
+    console.error('[Stripe Webhook] Missing STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET');
+    return res.sendStatus(400);
+  }
+
+  const stripe = require('stripe')(stripeKey);
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+  } catch (err) {
+    console.error('[Stripe Webhook] Signature verification failed:', err.message);
+    return res.sendStatus(400);
+  }
+
+  console.log(`[Stripe Webhook] Event: ${event.type}`);
+
+  switch (event.type) {
+    case 'checkout.session.completed': {
+      const session = event.data.object;
+      const plan = session.metadata?.plan || 'starter';
+      const billing = session.metadata?.interval || 'monthly';
+      console.log(`[Stripe] New subscription: ${session.customer_email} — Plan: ${plan}/${billing}`);
+
+      try {
+        const supabase = require('./supabase');
+
+        // Get full customer details from Stripe (name, address, etc.)
+        let customerName = session.customer_details?.name || '';
+        const customerEmail = session.customer_email || session.customer_details?.email || '';
+        const customerPhone = session.customer_details?.phone || '';
+
+        // If we have a Stripe customer ID, fetch more details
+        if (session.customer) {
+          try {
+            const stripeCustomer = await stripe.customers.retrieve(session.customer);
+            if (!customerName && stripeCustomer.name) customerName = stripeCustomer.name;
+          } catch (e) {
+            console.warn('[Stripe] Could not fetch customer details:', e.message);
+          }
+        }
+
+        // Check if this email already exists as a client
+        const { data: existingClient } = await supabase
+          .from('clients')
+          .select('id')
+          .eq('email', customerEmail)
+          .maybeSingle();
+
+        if (existingClient) {
+          console.log(`[Stripe] Client already exists for ${customerEmail} (id: ${existingClient.id}), skipping creation`);
+          // Update status to active in case they were inactive
+          await supabase
+            .from('clients')
+            .update({ status: 'active' })
+            .eq('id', existingClient.id);
+          break;
+        }
+
+        // Map plan to a default vertical — they'll pick during onboarding
+        const verticalId = 'general-contractor';
+
+        // Create the client record
+        const { data: newClient, error: clientError } = await supabase
+          .from('clients')
+          .insert({
+            name: customerName || 'New Client',
+            business_name: customerName ? `${customerName}'s Business` : 'New Business',
+            vertical_id: verticalId,
+            phone: customerPhone || null,
+            email: customerEmail,
+            status: 'onboarding',
+          })
+          .select()
+          .single();
+
+        if (clientError) {
+          console.error('[Stripe] Failed to create client in Supabase:', clientError.message);
+          break;
+        }
+
+        console.log(`[Stripe] Created new client: ${newClient.id} (${customerName || customerEmail})`);
+
+        // Create default client_config
+        const { error: configError } = await supabase
+          .from('client_config')
+          .insert({
+            client_id: newClient.id,
+            vertical_id: verticalId,
+            business_name: newClient.business_name,
+            owner_email: customerEmail,
+            ai_name: 'Alex',
+            timezone: 'America/New_York',
+          });
+
+        if (configError) {
+          console.error('[Stripe] Failed to create client_config:', configError.message);
+        } else {
+          console.log(`[Stripe] Created client_config for ${newClient.id}`);
+        }
+
+        // Store Stripe IDs as metadata in an alert so we can reference them
+        await supabase.from('alerts').insert({
+          client_id: newClient.id,
+          type: 'new_signup',
+          message: `New ${plan} (${billing}) subscriber via Stripe. Customer: ${session.customer}, Subscription: ${session.subscription}`,
+          severity: 'info',
+        });
+
+        // Send welcome email with onboarding call CTA
+        try {
+          const sgMail = require('@sendgrid/mail');
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+          const onboardingPhone = process.env.VAPI_ONBOARDING_PHONE_NUMBER || '+17867332114';
+          const onboardingPhoneFormatted = '(786) 733-2114';
+          const firstName = customerName ? customerName.split(' ')[0] : 'there';
+          const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+
+          await sgMail.send({
+            to: customerEmail,
+            from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy' },
+            subject: `Welcome to RunBy — Call Now to Set Up Your AI Employee`,
+            html: `
+              <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0d0d1a; color: #c8c8d8; padding: 40px; border-radius: 12px;">
+                <h1 style="color: #ffffff; font-size: 28px; margin-bottom: 8px;">Welcome to RunBy!</h1>
+                <p style="color: #8b8b9e; font-size: 14px; margin-bottom: 24px;">Your <strong style="color: #e94560;">${planLabel}</strong> plan is active — 14-day free trial started</p>
+
+                <p style="font-size: 16px;">Hey ${firstName},</p>
+                <p style="font-size: 16px; line-height: 1.6;">You're one quick call away from having your AI staff up and running. Our onboarding assistant will walk you through everything — your business details, services, hours, and how you want things handled. It takes about 5-10 minutes.</p>
+
+                <div style="text-align: center; margin: 32px 0;">
+                  <a href="tel:${onboardingPhone}" style="display: inline-block; background: #e94560; color: #ffffff; font-size: 18px; font-weight: 700; padding: 16px 40px; border-radius: 8px; text-decoration: none; letter-spacing: 0.02em;">
+                    Call Now to Get Set Up
+                  </a>
+                  <p style="color: #8b8b9e; font-size: 14px; margin-top: 12px;">${onboardingPhoneFormatted} — available 24/7</p>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin: 24px 0;">
+                  <p style="color: #ffffff; font-weight: 600; margin-bottom: 12px; font-size: 15px;">What we'll cover on the call:</p>
+                  <p style="margin: 0; line-height: 2; font-size: 14px;">
+                    <span style="color: #e94560;">1.</span> Your business name and type<br>
+                    <span style="color: #e94560;">2.</span> Services you offer and service area<br>
+                    <span style="color: #e94560;">3.</span> Your business hours<br>
+                    <span style="color: #e94560;">4.</span> How you want your AI staff to sound
+                  </p>
+                </div>
+
+                <p style="font-size: 15px; line-height: 1.6;">Once we have your info, we'll configure your AI staff and you'll be live within 48 hours. You can also access your dashboard anytime at <a href="https://app.runbyai.co" style="color: #e94560;">app.runbyai.co</a>.</p>
+
+                <p style="font-size: 15px; line-height: 1.6;">Prefer to talk to a human? No problem — call Jon directly at <a href="tel:+17867332209" style="color: #e94560;">(786) 733-2209</a>.</p>
+
+                <p style="margin-top: 30px; color: #8b8b9e; font-size: 13px;">— The RunBy Team</p>
+              </div>
+            `,
+          });
+          console.log(`[Stripe] Onboarding email sent to ${customerEmail}`);
+        } catch (emailErr) {
+          console.error('[Stripe] Failed to send onboarding email:', emailErr.message);
+        }
+
+        // Notify Jon about the new signup
+        try {
+          const sgMail = require('@sendgrid/mail');
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+          await sgMail.send({
+            to: process.env.OWNER_EMAIL,
+            from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy Alerts' },
+            subject: `New Signup: ${customerName || customerEmail} — ${plan} plan`,
+            html: `
+              <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>New Client Signup</h2>
+                <p><strong>Name:</strong> ${customerName || 'Not provided'}</p>
+                <p><strong>Email:</strong> ${customerEmail}</p>
+                <p><strong>Phone:</strong> ${customerPhone || 'Not provided'}</p>
+                <p><strong>Plan:</strong> ${plan} (${billing})</p>
+                <p><strong>Stripe Customer:</strong> ${session.customer}</p>
+                <p><strong>Client ID:</strong> ${newClient.id}</p>
+                <p>Schedule their onboarding call ASAP.</p>
+              </div>
+            `,
+          });
+        } catch (notifyErr) {
+          console.error('[Stripe] Failed to notify owner:', notifyErr.message);
+        }
+
+      } catch (err) {
+        console.error('[Stripe] Error creating client from checkout:', err.message);
+      }
+      break;
+    }
+    case 'customer.subscription.updated': {
+      const sub = event.data.object;
+      console.log(`[Stripe] Subscription updated: ${sub.id} — Status: ${sub.status}`);
+      break;
+    }
+    case 'customer.subscription.deleted': {
+      const sub = event.data.object;
+      console.log(`[Stripe] Subscription cancelled: ${sub.id}`);
+      try {
+        const supabase = require('./supabase');
+        // Find client by matching the Stripe customer ID in alerts
+        const { data: alert } = await supabase
+          .from('alerts')
+          .select('client_id')
+          .eq('type', 'new_signup')
+          .like('message', `%${sub.customer}%`)
+          .maybeSingle();
+
+        if (alert?.client_id) {
+          await supabase
+            .from('clients')
+            .update({ status: 'inactive' })
+            .eq('id', alert.client_id);
+          console.log(`[Stripe] Client ${alert.client_id} set to inactive`);
+        }
+      } catch (err) {
+        console.error('[Stripe] Error deactivating client:', err.message);
+      }
+      break;
+    }
+    case 'invoice.payment_failed': {
+      const invoice = event.data.object;
+      console.log(`[Stripe] Payment failed: ${invoice.customer_email}`);
+      try {
+        const sgMail = require('@sendgrid/mail');
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+        if (invoice.customer_email) {
+          await sgMail.send({
+            to: invoice.customer_email,
+            from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy' },
+            subject: 'RunBy — Payment Failed',
+            html: `
+              <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px;">
+                <h2>Payment Issue</h2>
+                <p>We weren't able to process your latest payment for RunBy. Please update your payment method to keep your AI staff running.</p>
+                <p><a href="https://app.runbyai.co" style="color: #e94560;">Update Payment Method</a></p>
+                <p>Questions? Call us at <a href="tel:+17867332209">(786) 733-2209</a>.</p>
+              </div>
+            `,
+          });
+        }
+
+        // Notify Jon
+        await sgMail.send({
+          to: process.env.OWNER_EMAIL,
+          from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy Alerts' },
+          subject: `Payment Failed: ${invoice.customer_email}`,
+          html: `<p>Payment failed for ${invoice.customer_email}. Stripe customer: ${invoice.customer}. Amount: $${(invoice.amount_due / 100).toFixed(2)}</p>`,
+        });
+      } catch (err) {
+        console.error('[Stripe] Error handling payment failure:', err.message);
+      }
+      break;
+    }
+    default:
+      console.log(`[Stripe Webhook] Unhandled event: ${event.type}`);
+  }
+
+  res.json({ received: true });
 });
 
 // ── Diagnostic: test Supabase write ──
