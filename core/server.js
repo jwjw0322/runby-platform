@@ -2,6 +2,23 @@
 // Express server — routes calls to the correct client dynamically
 
 require('dotenv').config();
+
+// Error monitoring (Sentry)
+let Sentry;
+if (process.env.SENTRY_DSN) {
+  try {
+    Sentry = require('@sentry/node');
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV || 'production',
+      tracesSampleRate: 0.1,
+    });
+    console.log('[Sentry] Error monitoring initialized');
+  } catch (e) {
+    console.warn('[Sentry] @sentry/node not installed, skipping error monitoring');
+  }
+}
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -45,6 +62,46 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Simple rate limiting
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 30; // 30 requests per minute per IP
+
+app.use((req, res, next) => {
+  // Skip rate limiting for webhooks (they come from trusted services)
+  if (req.path.startsWith('/webhook/')) return next();
+
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+  const now = Date.now();
+
+  if (!rateLimitMap.has(ip)) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return next();
+  }
+
+  const entry = rateLimitMap.get(ip);
+  if (now > entry.resetAt) {
+    entry.count = 1;
+    entry.resetAt = now + RATE_LIMIT_WINDOW;
+    return next();
+  }
+
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
+  next();
+});
+
+// Clean up rate limit map every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap) {
+    if (now > entry.resetAt) rateLimitMap.delete(ip);
+  }
+}, 5 * 60 * 1000);
 
 app.use(express.json());
 
@@ -497,7 +554,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
       allow_promotion_codes: true,
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
-      customer_creation: 'always',
       success_url: `${websiteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${websiteUrl}/pricing`,
       metadata: {
@@ -785,6 +841,239 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
   res.json({ received: true });
 });
 
+// Contact form
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, phone, business_type, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'Missing required fields: name, email, subject, message' });
+    }
+
+    // Store in Supabase
+    try {
+      const supabase = require('./supabase');
+      await supabase.from('alerts').insert({
+        client_id: '00000000-0000-0000-0000-000000000001',
+        type: 'contact_form',
+        message: JSON.stringify({ name, email, phone, business_type, subject, message }),
+        severity: 'info',
+      });
+    } catch (dbErr) {
+      console.error('[Contact] DB error:', dbErr.message);
+    }
+
+    // Send email to Jon
+    try {
+      const sgMail = require('@sendgrid/mail');
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      await sgMail.send({
+        to: process.env.OWNER_EMAIL,
+        from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy Contact' },
+        subject: `New Contact: ${subject} — ${name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+            <p><strong>Business Type:</strong> ${business_type || 'Not specified'}</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <hr>
+            <p><strong>Message:</strong></p>
+            <p>${message}</p>
+          </div>
+        `,
+        replyTo: email,
+      });
+    } catch (emailErr) {
+      console.error('[Contact] Email error:', emailErr.message);
+    }
+
+    // Send auto-reply to the person
+    try {
+      const sgMail = require('@sendgrid/mail');
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      await sgMail.send({
+        to: email,
+        from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy' },
+        subject: `We got your message, ${name.split(' ')[0]}!`,
+        html: `
+          <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0d0d1a; color: #c8c8d8; padding: 40px; border-radius: 12px;">
+            <h1 style="color: #ffffff; font-size: 24px;">Thanks for reaching out!</h1>
+            <p style="font-size: 15px; line-height: 1.6;">Hey ${name.split(' ')[0]}, we received your message and will get back to you within 24 hours.</p>
+            <p style="font-size: 15px; line-height: 1.6;">In the meantime, feel free to:</p>
+            <p style="font-size: 15px; line-height: 1.8;">
+              → <a href="tel:+17867332209" style="color: #e94560; text-decoration: none;">Call us at (786) 733-2209</a><br>
+              → <a href="https://runbyai.co/how-it-works" style="color: #e94560; text-decoration: none;">See how RunBy works</a><br>
+              → <a href="https://runbyai.co/calculator" style="color: #e94560; text-decoration: none;">Calculate your savings</a>
+            </p>
+            <p style="margin-top: 30px; color: #8b8b9e; font-size: 13px;">— The RunBy Team</p>
+          </div>
+        `,
+      });
+    } catch (autoReplyErr) {
+      console.error('[Contact] Auto-reply error:', autoReplyErr.message);
+    }
+
+    console.log(`[Contact] Form submission from ${name} (${email}) — ${subject}`);
+    res.json({ success: true, message: 'Message received. We\'ll be in touch within 24 hours.' });
+
+  } catch (error) {
+    console.error('[Contact] Error:', error.message);
+    res.status(500).json({ error: 'Something went wrong. Please email jonathan@runbyai.co directly.' });
+  }
+});
+
+// ROI Calculator lead capture
+app.post('/api/calculator-lead', async (req, res) => {
+  try {
+    const { email, business_name, business_type, calculator_results } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Store lead in Supabase
+    try {
+      const supabase = require('./supabase');
+      await supabase.from('demo_leads').insert({
+        name: business_name || '',
+        email,
+        phone: '',
+        business_type: business_type || '',
+        source: 'roi_calculator',
+        notes: JSON.stringify(calculator_results || {}),
+      });
+    } catch (dbErr) {
+      console.error('[Calculator] DB error:', dbErr.message);
+    }
+
+    // Notify Jon
+    try {
+      const sgMail = require('@sendgrid/mail');
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const results = calculator_results || {};
+      await sgMail.send({
+        to: process.env.OWNER_EMAIL,
+        from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy Leads' },
+        subject: `ROI Calculator Lead: ${business_name || email} (${business_type || 'Unknown'})`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>New ROI Calculator Lead</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Business:</strong> ${business_name || 'Not provided'}</p>
+            <p><strong>Type:</strong> ${business_type || 'Not specified'}</p>
+            <hr>
+            <h3>Their Calculator Results:</h3>
+            <p><strong>Monthly Revenue Lost:</strong> $${results.monthly_revenue_lost || 'N/A'}</p>
+            <p><strong>Monthly Time Cost:</strong> $${results.monthly_time_cost || 'N/A'}</p>
+            <p><strong>Annual Savings with RunBy:</strong> $${results.annual_savings || 'N/A'}</p>
+            <p><strong>ROI:</strong> ${results.roi_percent || 'N/A'}%</p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error('[Calculator] Email error:', emailErr.message);
+    }
+
+    console.log(`[Calculator] Lead captured: ${email} (${business_type})`);
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error('[Calculator] Error:', error.message);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Newsletter signup
+app.post('/api/subscribe-newsletter', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    try {
+      const supabase = require('./supabase');
+      await supabase.from('demo_leads').insert({
+        name: '',
+        email,
+        phone: '',
+        business_type: '',
+        source: 'newsletter',
+        notes: 'Blog newsletter signup',
+      });
+    } catch (dbErr) {
+      console.error('[Newsletter] DB error:', dbErr.message);
+    }
+
+    console.log(`[Newsletter] New subscriber: ${email}`);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[Newsletter] Error:', error.message);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Referral program
+app.post('/api/referral', async (req, res) => {
+  try {
+    const { referrer_email, referred_name, referred_email, referred_phone, referred_business_type } = req.body;
+
+    if (!referrer_email || !referred_email) {
+      return res.status(400).json({ error: 'Referrer email and referred email are required' });
+    }
+
+    // Store referral in Supabase
+    try {
+      const supabase = require('./supabase');
+      await supabase.from('demo_leads').insert({
+        name: referred_name || '',
+        email: referred_email,
+        phone: referred_phone || '',
+        business_type: referred_business_type || '',
+        source: 'referral',
+        notes: JSON.stringify({ referrer_email }),
+      });
+    } catch (dbErr) {
+      console.error('[Referral] DB error:', dbErr.message);
+    }
+
+    // Notify Jon
+    try {
+      const sgMail = require('@sendgrid/mail');
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      await sgMail.send({
+        to: process.env.OWNER_EMAIL,
+        from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'RunBy Referrals' },
+        subject: `New Referral: ${referred_name || referred_email} (from ${referrer_email})`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>New Referral</h2>
+            <p><strong>Referred by:</strong> ${referrer_email}</p>
+            <p><strong>Referred person:</strong> ${referred_name || 'Not provided'}</p>
+            <p><strong>Email:</strong> ${referred_email}</p>
+            <p><strong>Phone:</strong> ${referred_phone || 'Not provided'}</p>
+            <p><strong>Business Type:</strong> ${referred_business_type || 'Not specified'}</p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error('[Referral] Email error:', emailErr.message);
+    }
+
+    console.log(`[Referral] ${referrer_email} referred ${referred_email}`);
+    res.json({ success: true, message: 'Referral submitted! We\'ll reach out to them.' });
+
+  } catch (error) {
+    console.error('[Referral] Error:', error.message);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
 // ── Diagnostic: test Supabase write ──
 app.get('/test/supabase-write', async (req, res) => {
   const supabase = require('./supabase');
@@ -841,6 +1130,14 @@ app.get('/test/last-webhook', (req, res) => {
 
 // Initialize follow-up email scheduler
 initFollowUpScheduler();
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('[Unhandled Error]', err.message);
+  console.error(err.stack);
+  if (Sentry) Sentry.captureException(err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 app.listen(PORT, () => {
   console.log(`\nRunBy server listening on port ${PORT}`);
