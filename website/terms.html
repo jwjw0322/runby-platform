@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — RunBy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --accent: #e94560;
+    --accent-glow: rgba(233, 69, 96, 0.3);
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px var(--accent-glow);
+  }
+
+  /* HEADER */
+  .page-header {
+    padding: 10rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header-bg {
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 120%; height: 140%;
+    background:
+      radial-gradient(ellipse 600px 400px at 30% 40%, rgba(67, 97, 238, 0.08), transparent),
+      radial-gradient(ellipse 500px 500px at 70% 60%, rgba(233, 69, 96, 0.05), transparent);
+  }
+
+  .page-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.8rem;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+    color: var(--gray);
+  }
+
+  /* LEGAL CONTENT */
+  .legal-content {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  .legal-content h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .legal-content h3 {
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+
+  .legal-content p {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .legal-content ul {
+    list-style: none;
+    margin-bottom: 1rem;
+    padding-left: 0;
+  }
+
+  .legal-content ul li {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    padding: 0.3rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .legal-content ul li::before {
+    content: '→';
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+  }
+
+  .legal-content a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .legal-content a:hover { color: var(--white); }
+
+  .legal-content strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .legal-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+  <div class="page-header-bg"></div>
+  <div class="page-header-content">
+    <h1>Terms of Service</h1>
+    <p>Last updated: March 7, 2026</p>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<div class="legal-content">
+
+  <p>These Terms of Service ("Terms") govern your access to and use of the services provided by RunBy, Inc. ("RunBy," "we," "us," or "our"), including our website at runbyai.co, AI-powered staff services, dashboard, and related applications (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.</p>
+
+  <h2>1. Eligibility</h2>
+  <p>You must be at least 18 years old and have the legal authority to enter into these Terms on behalf of yourself or your business. By using the Service, you represent that you meet these requirements.</p>
+
+  <h2>2. Account Registration</h2>
+  <p>To use the Service, you must create an account and provide accurate, complete information. You are responsible for maintaining the security of your account credentials and for all activity that occurs under your account. You must notify us immediately of any unauthorized access.</p>
+
+  <h2>3. Service Description</h2>
+  <p>RunBy provides AI-powered staff services for businesses, including but not limited to:</p>
+  <ul>
+    <li>AI voice agents that answer calls and messages on your behalf</li>
+    <li>Automated appointment scheduling and calendar management</li>
+    <li>Customer follow-up sequences and review management</li>
+    <li>Invoice collection and payment reminders</li>
+    <li>Daily owner briefings and performance reporting</li>
+  </ul>
+  <p>The Service operates on your behalf based on the business information, preferences, and instructions you provide during onboarding and configuration. You are responsible for ensuring the accuracy of the information provided to RunBy.</p>
+
+  <h2>4. Subscriptions and Payments</h2>
+
+  <h3>Plans and Pricing</h3>
+  <p>RunBy offers subscription plans at prices listed on our pricing page. Prices may change with 30 days' notice to existing subscribers.</p>
+
+  <h3>Free Trial</h3>
+  <p>New accounts receive a 14-day free trial. During the trial, you have full access to the features included in your selected plan. At the end of the trial, you must enter payment information to continue using the Service.</p>
+
+  <h3>Billing</h3>
+  <p>Subscriptions are billed monthly or annually, depending on the plan you select. All payments are processed securely through Stripe. By subscribing, you authorize us to charge your payment method on a recurring basis.</p>
+
+  <h3>Cancellation</h3>
+  <p>You may cancel your subscription at any time through your dashboard or by contacting us. Monthly subscriptions are effective until the end of the current billing period. Annual subscriptions remain active until the end of the annual term. We do not provide prorated refunds for partial billing periods.</p>
+
+  <h3>Refunds</h3>
+  <p>We offer a 14-day money-back guarantee for new subscribers. If you are not satisfied within the first 14 days of your paid subscription, contact us for a full refund. After 14 days, refunds are at our sole discretion.</p>
+
+  <h2>5. Your Responsibilities</h2>
+  <p>As a user of the Service, you agree to:</p>
+  <ul>
+    <li>Provide accurate business information for AI configuration</li>
+    <li>Comply with all applicable laws regarding customer communications, including consent requirements for call recording</li>
+    <li>Not use the Service for any unlawful, deceptive, or harmful purpose</li>
+    <li>Not interfere with or attempt to compromise the security or functionality of the Service</li>
+    <li>Ensure that the information your AI employee communicates to customers is truthful and not misleading</li>
+    <li>Comply with the CAN-SPAM Act, TCPA, and other applicable communication regulations</li>
+  </ul>
+
+  <h2>6. AI Interactions</h2>
+  <p>RunBy's AI employees interact with your customers on your behalf. You acknowledge and agree that:</p>
+  <ul>
+    <li>AI responses are generated based on the information and instructions you provide</li>
+    <li>While we strive for accuracy, AI interactions may occasionally contain errors or misunderstandings</li>
+    <li>You are ultimately responsible for the quality of service provided to your customers</li>
+    <li>We recommend reviewing AI interactions regularly and providing feedback to improve accuracy</li>
+    <li>RunBy is not liable for business decisions made based on AI recommendations</li>
+  </ul>
+
+  <h2>7. Call Recording</h2>
+  <p>If call recording is enabled, you are responsible for ensuring compliance with all applicable federal and state laws regarding call recording and consent. Many jurisdictions require all-party consent for call recordings. RunBy provides automated disclosure at the beginning of recorded calls, but you are responsible for ensuring this meets your jurisdiction's requirements.</p>
+
+  <h2>8. Intellectual Property</h2>
+  <p>RunBy retains all rights to the Service, including our AI technology, software, algorithms, designs, and documentation. Your subscription grants you a limited, non-exclusive, non-transferable license to use the Service for your business operations during your subscription period.</p>
+  <p>You retain ownership of all business information, customer data, and content you provide to RunBy. You grant us a limited license to use this information solely for the purpose of providing the Service.</p>
+
+  <h2>9. Data and Privacy</h2>
+  <p>Our collection and use of personal information is governed by our <a href="/privacy">Privacy Policy</a>. By using the Service, you consent to our data practices as described in the Privacy Policy.</p>
+
+  <h2>10. Limitation of Liability</h2>
+  <p>To the maximum extent permitted by law, RunBy shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, revenue, data, or business opportunities, arising from your use of or inability to use the Service.</p>
+  <p>Our total liability for any claims arising under these Terms shall not exceed the amount you paid to RunBy in the twelve (12) months preceding the claim.</p>
+
+  <h2>11. Disclaimer of Warranties</h2>
+  <p>The Service is provided "as is" and "as available" without warranties of any kind, whether express, implied, or statutory. We do not guarantee that the Service will be uninterrupted, error-free, or that AI interactions will be perfectly accurate in all circumstances.</p>
+
+  <h2>12. Indemnification</h2>
+  <p>You agree to indemnify and hold harmless RunBy, its officers, directors, employees, and agents from any claims, damages, losses, or expenses (including reasonable attorneys' fees) arising from your use of the Service, your violation of these Terms, or your violation of any third-party rights.</p>
+
+  <h2>13. Termination</h2>
+  <p>We may suspend or terminate your access to the Service at any time for violation of these Terms or for any other reason at our sole discretion. Upon termination, your right to use the Service ceases immediately. We will retain your data for 90 days after termination to allow for account reactivation.</p>
+
+  <h2>14. Modifications to Terms</h2>
+  <p>We may update these Terms from time to time. We will notify you of material changes by email or through the Service at least 30 days before they take effect. Your continued use of the Service after changes take effect constitutes acceptance of the updated Terms.</p>
+
+  <h2>15. Governing Law</h2>
+  <p>These Terms are governed by and construed in accordance with the laws of the State of Florida, without regard to conflict of law principles. Any disputes arising under these Terms shall be resolved in the state or federal courts located in Miami-Dade County, Florida.</p>
+
+  <h2>16. Miscellaneous</h2>
+  <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect. Our failure to enforce any provision does not waive our right to enforce it in the future. These Terms constitute the entire agreement between you and RunBy regarding the Service.</p>
+
+  <h2>17. Contact Us</h2>
+  <p>If you have questions about these Terms, contact us at:</p>
+  <p>
+    RunBy, Inc.<br>
+    Miami, FL 33101<br>
+    Email: <a href="mailto:jonathan@runbyai.co">jonathan@runbyai.co</a><br>
+    Phone: <a href="tel:+17867332209">1 (786) 733-2209</a>
+  </p>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+</footer>
+
+</body>
+</html>

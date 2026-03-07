@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — RunBy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --navy: #0f1b3d;
+    --accent: #e94560;
+    --accent-glow: rgba(233, 69, 96, 0.3);
+    --blue: #4361ee;
+    --light: #f4f4f8;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+    --green: #10b981;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px var(--accent-glow);
+  }
+
+  /* HEADER */
+  .page-header {
+    padding: 10rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header-bg {
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 120%; height: 140%;
+    background:
+      radial-gradient(ellipse 600px 400px at 30% 40%, rgba(67, 97, 238, 0.12), transparent),
+      radial-gradient(ellipse 500px 500px at 70% 60%, rgba(233, 69, 96, 0.08), transparent);
+  }
+
+  .page-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .page-header p {
+    font-size: 1.15rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  /* BILLING TOGGLE */
+  .billing-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem auto 0;
+  }
+
+  .billing-toggle label {
+    font-size: 0.95rem;
+    color: var(--gray);
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .billing-toggle label.active { color: var(--white); font-weight: 600; }
+
+  .toggle-switch {
+    position: relative;
+    width: 52px;
+    height: 28px;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 28px;
+    transition: background 0.3s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 20px; width: 20px;
+    left: 3px; bottom: 3px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+
+  .toggle-switch input:checked + .toggle-slider {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(24px);
+  }
+
+  .save-badge {
+    background: var(--green);
+    color: var(--white);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+
+  /* PRICING GRID */
+  .pricing-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .price-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .price-card:hover { transform: translateY(-6px); }
+
+  .price-card.featured {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.04);
+  }
+
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--white);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 1rem;
+    border-radius: 100px;
+  }
+
+  .price-tier {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .price-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+    transition: opacity 0.2s;
+  }
+
+  .price-amount span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .price-original {
+    font-size: 0.85rem;
+    color: var(--gray);
+    text-decoration: line-through;
+    margin-bottom: 0.3rem;
+    min-height: 1.2rem;
+  }
+
+  .price-desc {
+    font-size: 0.88rem;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+
+  .price-features li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .price-features li::before {
+    content: '→ ';
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .price-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .price-card.featured .price-btn {
+    background: var(--accent);
+    color: var(--white);
+  }
+
+  .price-card:not(.featured) .price-btn {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .price-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(233, 69, 96, 0.2);
+  }
+
+  .price-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* GUARANTEE */
+  .guarantee {
+    text-align: center;
+    padding: 3rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .guarantee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 100px;
+    font-size: 0.85rem;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .guarantee p {
+    font-size: 0.95rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* FAQ */
+  .faq-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .faq-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 1.2rem 0;
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--white);
+    font-weight: 500;
+    gap: 1rem;
+  }
+
+  .faq-question::after {
+    content: '+';
+    font-size: 1.4rem;
+    color: var(--accent);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .faq-item.open .faq-question::after {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .faq-item.open .faq-answer {
+    max-height: 200px;
+    padding-top: 0.8rem;
+  }
+
+  .faq-answer p {
+    font-size: 0.92rem;
+    color: var(--gray);
+    line-height: 1.65;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* LOADING SPINNER */
+  .btn-loading .btn-text { display: none; }
+  .btn-loading .btn-spinner { display: inline-block; }
+  .btn-spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+  <div class="page-header-bg"></div>
+  <div class="page-header-content">
+    <div class="section-label">Pricing</div>
+    <h1>Less than a part-time hire. More than a full-time team.</h1>
+    <p>14-day free trial on every plan. No credit card required to start. Cancel anytime.</p>
+
+    <div class="billing-toggle">
+      <label id="label-monthly" class="active">Monthly</label>
+      <div class="toggle-switch">
+        <input type="checkbox" id="billing-toggle">
+        <label class="toggle-slider" for="billing-toggle"></label>
+      </div>
+      <label id="label-annual">Annual</label>
+      <span class="save-badge">SAVE 20%</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<div class="pricing-section">
+  <div class="pricing-grid">
+
+    <!-- STARTER -->
+    <div class="price-card" data-plan="starter">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount" data-monthly="299" data-annual="239">$299<span>/mo</span></div>
+      <div class="price-original"></div>
+      <div class="price-desc">Perfect for solo operators and small teams getting started.</div>
+      <ul class="price-features">
+        <li>200 calls & messages per month</li>
+        <li>AI staff — calls, bookings & follow-ups (24/7)</li>
+        <li>Appointment scheduling</li>
+        <li>Basic customer follow-up</li>
+        <li>Daily owner briefing</li>
+        <li>Email notifications</li>
+        <li>1 phone number included</li>
+      </ul>
+      <button class="price-btn" onclick="handleSubscribe('starter')">
+        <span class="btn-text">Start Free Trial</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </div>
+
+    <!-- GROWTH -->
+    <div class="price-card featured" data-plan="growth">
+      <div class="price-tier">Growth</div>
+      <div class="price-amount" data-monthly="449" data-annual="359">$449<span>/mo</span></div>
+      <div class="price-original"></div>
+      <div class="price-desc">For growing businesses ready to stop losing leads.</div>
+      <ul class="price-features">
+        <li>500 calls & messages per month</li>
+        <li>Everything in Starter</li>
+        <li>Advanced follow-up sequences</li>
+        <li>Invoice chasing & reminders</li>
+        <li>Review management</li>
+        <li>Bilingual (English + Spanish)</li>
+        <li>Outbound customer campaigns</li>
+        <li>2 phone numbers included</li>
+      </ul>
+      <button class="price-btn" onclick="handleSubscribe('growth')">
+        <span class="btn-text">Start Free Trial</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </div>
+
+    <!-- PRO -->
+    <div class="price-card" data-plan="pro">
+      <div class="price-tier">Pro</div>
+      <div class="price-amount" data-monthly="599" data-annual="479">$599<span>/mo</span></div>
+      <div class="price-original"></div>
+      <div class="price-desc">Full AI operations for businesses scaling fast.</div>
+      <ul class="price-features">
+        <li>Unlimited calls & messages</li>
+        <li>Everything in Growth</li>
+        <li>Custom AI workflows</li>
+        <li>Priority support & onboarding</li>
+        <li>Dedicated account manager</li>
+        <li>API access & integrations</li>
+        <li>Up to 5 phone numbers</li>
+        <li>White-glove setup</li>
+      </ul>
+      <button class="price-btn" onclick="handleSubscribe('pro')">
+        <span class="btn-text">Start Free Trial</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="guarantee">
+  <div class="guarantee-badge">&#10003; 14-Day Money-Back Guarantee</div>
+  <p>Try RunBy risk-free. If you don't see the value within 14 days, we'll refund every penny. No questions asked. We're that confident.</p>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <h2>Common Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-question">How does the 14-day free trial work?</div>
+    <div class="faq-answer"><p>Start any plan without a credit card. You get full access to all features in your tier for 14 days. At the end of the trial, you'll be prompted to enter payment to continue. No surprise charges.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Can I change plans later?</div>
+    <div class="faq-answer"><p>Absolutely. Upgrade or downgrade anytime from your dashboard. Changes take effect on your next billing cycle. If you upgrade mid-cycle, you'll be prorated for the difference.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">What happens if I go over my call limit?</div>
+    <div class="faq-answer"><p>We'll never cut off your AI mid-conversation. If you're consistently exceeding your plan, we'll reach out to recommend an upgrade. There are no surprise overage charges.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Is there a contract or commitment?</div>
+    <div class="faq-answer"><p>No long-term contracts. Monthly plans are month-to-month — cancel anytime. Annual plans are billed yearly at a 20% discount, and you can cancel before renewal.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">What payment methods do you accept?</div>
+    <div class="faq-answer"><p>We accept all major credit cards (Visa, Mastercard, Amex, Discover) through Stripe. ACH bank transfers are available for annual plans.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Do I need to set anything up myself?</div>
+    <div class="faq-answer"><p>Nope. After signup, we schedule a 30-minute onboarding call where we learn about your business. We handle the entire AI configuration. You'll be live within 48 hours.</p></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. Your AI Employee. Always On.</div>
+</footer>
+
+<script>
+  // ─────────────────────────────────────────
+  // BILLING TOGGLE (Monthly / Annual)
+  // ─────────────────────────────────────────
+  const billingToggle = document.getElementById('billing-toggle');
+  const labelMonthly = document.getElementById('label-monthly');
+  const labelAnnual = document.getElementById('label-annual');
+  const priceAmounts = document.querySelectorAll('.price-amount');
+  const priceOriginals = document.querySelectorAll('.price-original');
+
+  function updatePricing() {
+    const isAnnual = billingToggle.checked;
+    labelMonthly.classList.toggle('active', !isAnnual);
+    labelAnnual.classList.toggle('active', isAnnual);
+
+    priceAmounts.forEach((el, i) => {
+      const monthly = el.dataset.monthly;
+      const annual = el.dataset.annual;
+      const originalEl = el.parentElement.querySelector('.price-original');
+
+      if (isAnnual) {
+        el.innerHTML = `$${annual}<span>/mo</span>`;
+        originalEl.textContent = `$${monthly}/mo billed monthly`;
+      } else {
+        el.innerHTML = `$${monthly}<span>/mo</span>`;
+        originalEl.textContent = '';
+      }
+    });
+  }
+
+  billingToggle.addEventListener('change', updatePricing);
+  labelMonthly.addEventListener('click', () => { billingToggle.checked = false; updatePricing(); });
+  labelAnnual.addEventListener('click', () => { billingToggle.checked = true; updatePricing(); });
+
+  // ─────────────────────────────────────────
+  // STRIPE CHECKOUT
+  // ─────────────────────────────────────────
+  const API_URL = 'https://api.runbyai.co';
+
+  async function handleSubscribe(plan) {
+    const btn = document.querySelector(`[data-plan="${plan}"] .price-btn`);
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+
+    const isAnnual = billingToggle.checked;
+    const interval = isAnnual ? 'annual' : 'monthly';
+
+    try {
+      const response = await fetch(`${API_URL}/api/create-checkout-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, interval }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Something went wrong. Please try again or call us at (786) 733-2209.');
+        btn.classList.remove('btn-loading');
+        btn.disabled = false;
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Unable to connect to payment system. Please try again or call us at (786) 733-2209.');
+      btn.classList.remove('btn-loading');
+      btn.disabled = false;
+    }
+  }
+
+  // ─────────────────────────────────────────
+  // FAQ ACCORDION
+  // ─────────────────────────────────────────
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      document.querySelectorAll('.faq-item').forEach(i => {
+        if (i !== item) i.classList.remove('open');
+      });
+      item.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>

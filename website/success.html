@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to RunBy!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #0d0d1a;
+    --accent: #e94560;
+    --accent-glow: rgba(233, 69, 96, 0.3);
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+    --green: #10b981;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  nav {
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+
+  .success-page {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .success-bg {
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 120%; height: 140%;
+    background:
+      radial-gradient(ellipse 500px 400px at 50% 50%, rgba(16, 185, 129, 0.1), transparent);
+  }
+
+  .success-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2.5rem;
+    animation: scaleIn 0.5s ease-out;
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .success-content h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s ease-out 0.2s both;
+  }
+
+  .success-content p {
+    font-size: 1.1rem;
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s ease-out 0.4s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .next-steps {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: left;
+    animation: fadeUp 0.6s ease-out 0.6s both;
+  }
+
+  .next-steps h3 {
+    color: var(--white);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    align-items: flex-start;
+  }
+
+  .step-item:last-child { border-bottom: none; }
+
+  .step-num {
+    background: var(--accent);
+    color: var(--white);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-item p {
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .step-item strong { color: var(--white); }
+
+  .success-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s ease-out 0.8s both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 0.9rem 2.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px var(--accent-glow);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 0.9rem 2.4rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.04);
+  }
+
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 2rem;
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+</nav>
+
+<div class="success-page">
+  <div class="success-bg"></div>
+  <div class="success-content">
+    <div class="success-icon">&#10003;</div>
+    <h1>Welcome to RunBy!</h1>
+    <p>Your subscription is confirmed. We're excited to help you stop doing admin and start growing your business.</p>
+    <p style="font-size: 0.95rem;">A confirmation email has been sent to your inbox with your receipt and account details.</p>
+
+    <div class="next-steps">
+      <h3>What Happens Next</h3>
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <p><strong>Onboarding call</strong> — We'll reach out within 24 hours to schedule a 30-minute setup call where we learn about your business.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <p><strong>AI configuration</strong> — Our team builds your custom AI staff: your services, your hours, your workflows, your tone of voice.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <p><strong>Go live</strong> — Within 48 hours, your AI employee starts answering calls and managing operations 24/7.</p>
+      </div>
+    </div>
+
+    <div class="success-buttons">
+      <a href="https://app.runbyai.co" class="btn-primary">Go to Dashboard</a>
+      <a href="/" class="btn-secondary">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2026 RunBy, Inc. All rights reserved.</footer>
+
+</body>
+</html>

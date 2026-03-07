@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — RunBy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --navy: #0f1b3d;
+    --accent: #e94560;
+    --accent-glow: rgba(233, 69, 96, 0.3);
+    --blue: #4361ee;
+    --light: #f4f4f8;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+    --green: #10b981;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px var(--accent-glow);
+  }
+
+  /* HEADER */
+  .page-header {
+    padding: 10rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header-bg {
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 120%; height: 140%;
+    background:
+      radial-gradient(ellipse 600px 400px at 30% 40%, rgba(67, 97, 238, 0.12), transparent),
+      radial-gradient(ellipse 500px 500px at 70% 60%, rgba(233, 69, 96, 0.08), transparent);
+  }
+
+  .page-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .page-header p {
+    font-size: 1.15rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* TIMELINE */
+  .timeline-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .timeline-step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    align-items: start;
+  }
+
+  .timeline-step:last-child { border-bottom: none; }
+
+  .timeline-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem;
+    color: rgba(233, 69, 96, 0.2);
+    line-height: 1;
+    text-align: center;
+  }
+
+  .timeline-content h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-content .timeline-time {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .timeline-content p {
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .timeline-content p:last-child { margin-bottom: 0; }
+
+  .timeline-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .detail-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 1.2rem;
+  }
+
+  .detail-item h4 {
+    color: var(--white);
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .detail-item p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  /* WHAT RUNBY HANDLES */
+  .handles-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .handles-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .handles-section > p {
+    font-size: 1.05rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+  }
+
+  .handles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .handle-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: border-color 0.3s;
+  }
+
+  .handle-card:hover {
+    border-color: rgba(67, 97, 238, 0.3);
+  }
+
+  .handle-card h3 {
+    color: var(--white);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .handle-card p {
+    color: var(--gray);
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .handle-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* COMPARISON */
+  .comparison-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .comparison-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    color: var(--white);
+    margin-bottom: 2.5rem;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .comparison-table th {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .comparison-table th:last-child {
+    color: var(--accent);
+  }
+
+  .comparison-table td {
+    padding: 1rem 1.2rem;
+    font-size: 0.92rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .comparison-table td:first-child {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .comparison-table td:nth-child(2) {
+    color: var(--gray);
+  }
+
+  .comparison-table td:last-child {
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+  }
+
+  .cta-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 4rem 3rem;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.08), rgba(67, 97, 238, 0.08));
+    border: 1px solid rgba(233, 69, 96, 0.15);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-inner::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(233, 69, 96, 0.06), transparent 60%);
+    animation: ctaPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes ctaPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  .cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--white);
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta p {
+    color: var(--gray);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 0.9rem 2.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.3s;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px var(--accent-glow);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .timeline-step { grid-template-columns: 50px 1fr; gap: 1rem; }
+    .timeline-number { font-size: 2.5rem; }
+    .comparison-table { font-size: 0.82rem; }
+    .comparison-table th, .comparison-table td { padding: 0.7rem 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+  <div class="page-header-bg"></div>
+  <div class="page-header-content">
+    <div class="section-label">How It Works</div>
+    <h1>Live in 48 hours. No IT department required.</h1>
+    <p>From signup to a fully operational AI employee — here's exactly what happens, step by step.</p>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<div class="timeline-section">
+
+  <div class="timeline-step">
+    <div class="timeline-number">01</div>
+    <div class="timeline-content">
+      <h3>Sign Up & Choose Your Plan</h3>
+      <div class="timeline-time">Day 1 — 5 minutes</div>
+      <p>Pick the plan that fits your business. Every plan starts with a 14-day free trial — no credit card required. You'll get immediate access to your dashboard and a confirmation email with next steps.</p>
+    </div>
+  </div>
+
+  <div class="timeline-step">
+    <div class="timeline-number">02</div>
+    <div class="timeline-content">
+      <h3>Onboarding Call</h3>
+      <div class="timeline-time">Day 1-2 — 30 minutes</div>
+      <p>We schedule a quick call to learn everything about your business. This is the only thing we need from you. After this, we handle the rest.</p>
+      <div class="timeline-details">
+        <div class="detail-item">
+          <h4>Services & Pricing</h4>
+          <p>What you offer, your service area, and how you price jobs.</p>
+        </div>
+        <div class="detail-item">
+          <h4>Hours & Availability</h4>
+          <p>Your business hours, how you handle after-hours, and emergency protocols.</p>
+        </div>
+        <div class="detail-item">
+          <h4>Tone & Personality</h4>
+          <p>How you want your AI staff to sound — friendly, professional, casual, bilingual, etc.</p>
+        </div>
+        <div class="detail-item">
+          <h4>Tools & Integrations</h4>
+          <p>Your calendar, CRM, invoicing tools, and any other systems RunBy needs to connect with.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-step">
+    <div class="timeline-number">03</div>
+    <div class="timeline-content">
+      <h3>We Build Your AI Employee</h3>
+      <div class="timeline-time">Day 1-2 — Behind the scenes</div>
+      <p>Our team configures your RunBy agent based on everything from the onboarding call. This includes setting up the voice persona, training it on your specific services and FAQ, connecting your calendar and tools, and building custom workflows for your business type.</p>
+      <p>We test everything internally before it ever touches a real customer call. Your AI employee will know your business as well as your best front-desk person.</p>
+    </div>
+  </div>
+
+  <div class="timeline-step">
+    <div class="timeline-number">04</div>
+    <div class="timeline-content">
+      <h3>Go Live</h3>
+      <div class="timeline-time">Day 2 — Flip the switch</div>
+      <p>We forward your business phone to RunBy (or give you a new dedicated number). From that moment, your AI employee is live — answering calls, booking appointments, sending confirmations, and handling customer inquiries 24/7.</p>
+      <p>You'll get your first daily briefing the next morning: a clean summary of what happened, what's scheduled, and what needs your attention.</p>
+    </div>
+  </div>
+
+  <div class="timeline-step">
+    <div class="timeline-number">05</div>
+    <div class="timeline-content">
+      <h3>It Gets Smarter Every Week</h3>
+      <div class="timeline-time">Ongoing — Automatic</div>
+      <p>RunBy learns from every interaction. It picks up on your customers' patterns, your most common questions, seasonal trends, and how your business operates. The longer it runs, the better it gets — no manual retraining needed.</p>
+      <p>You'll also get weekly performance reports showing calls handled, appointments booked, revenue captured, and follow-ups completed.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- WHAT RUNBY HANDLES -->
+<div class="handles-section">
+  <div class="section-label">Day-to-Day Operations</div>
+  <h2>Everything your AI employee handles.</h2>
+  <p>Once live, here's what RunBy takes off your plate — automatically, 24/7, without you lifting a finger.</p>
+
+  <div class="handles-grid">
+    <div class="handle-card">
+      <div class="handle-icon">&#128222;</div>
+      <h3>Inbound Calls & Texts</h3>
+      <p>Answers every call and message instantly. Asks the right questions, provides service info, and routes urgent issues to you.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#128197;</div>
+      <h3>Appointment Booking</h3>
+      <p>Checks your real-time availability, books the job, sends the customer a confirmation text, and adds it to your calendar.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#128276;</div>
+      <h3>Reminders & Confirmations</h3>
+      <p>Day-before reminders, 30-minute heads-up texts, and automatic rescheduling if someone needs to move their appointment.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#128172;</div>
+      <h3>Follow-Up Sequences</h3>
+      <p>Post-service check-ins, review requests, rebooking prompts for repeat customers, and win-back campaigns for lapsed clients.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#128176;</div>
+      <h3>Invoice Collection</h3>
+      <p>Polite, persistent payment reminders integrated with your invoicing system. Get paid faster without the awkward conversations.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#11088;</div>
+      <h3>Review Management</h3>
+      <p>Requests reviews from satisfied customers. Responds to Google and Yelp reviews. Alerts you immediately to negative feedback.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#128202;</div>
+      <h3>Daily Owner Briefing</h3>
+      <p>Every morning: yesterday's activity, today's schedule, outstanding items, and the few things that actually need your attention.</p>
+    </div>
+    <div class="handle-card">
+      <div class="handle-icon">&#127757;</div>
+      <h3>24/7 Coverage</h3>
+      <p>Nights, weekends, holidays — RunBy never sleeps. Emergencies get escalated. Everything else gets handled and logged for you.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison-section">
+  <h2>RunBy vs. the alternatives.</h2>
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Traditional Hire</th>
+        <th>RunBy AI Staff</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Annual cost</td>
+        <td>$40,000 — $55,000</td>
+        <td>$3,588 — $7,188</td>
+      </tr>
+      <tr>
+        <td>Availability</td>
+        <td>40 hrs/week</td>
+        <td>24/7/365</td>
+      </tr>
+      <tr>
+        <td>Simultaneous calls</td>
+        <td>1 at a time</td>
+        <td>Unlimited</td>
+      </tr>
+      <tr>
+        <td>Sick days & turnover</td>
+        <td>Yes — 60% annual turnover</td>
+        <td>Never</td>
+      </tr>
+      <tr>
+        <td>Training time</td>
+        <td>2-4 weeks</td>
+        <td>48 hours</td>
+      </tr>
+      <tr>
+        <td>Follow-ups & invoicing</td>
+        <td>Manual / inconsistent</td>
+        <td>Automatic</td>
+      </tr>
+      <tr>
+        <td>Performance reporting</td>
+        <td>None</td>
+        <td>Daily briefings + weekly reports</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <h2>See it in action. Free for 14 days.</h2>
+    <p>No credit card. No contracts. Most owners get 10+ hours back in their first week.</p>
+    <a href="/pricing" class="btn-primary">Start Your Free Trial →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+</footer>
+
+</body>
+</html>
