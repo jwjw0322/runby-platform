@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "RunBy AI-powered staff platform for service businesses",
   "main": "core/server.js",
+  "engines": {
+    "node": ">=20 <25"
+  },
   "scripts": {
     "start": "node core/server.js",
     "dev": "nodemon core/server.js",
