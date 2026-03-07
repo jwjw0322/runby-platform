@@ -1139,7 +1139,23 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+function logStartupDependencyChecks() {
+  try {
+    require.resolve('stripe');
+    console.log('[Startup Check] stripe module: OK');
+  } catch (error) {
+    console.error(`[Startup Check] stripe module: MISSING (${error.message})`);
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.warn('[Startup Check] STRIPE_SECRET_KEY: NOT SET');
+  } else {
+    console.log('[Startup Check] STRIPE_SECRET_KEY: SET');
+  }
+}
+
 app.listen(PORT, () => {
+  logStartupDependencyChecks();
   console.log(`\nRunBy server listening on port ${PORT}`);
   console.log(`Webhook URL: http://localhost:${PORT}/webhook/vapi`);
   console.log(`SUPABASE_URL: ${process.env.SUPABASE_URL || 'NOT SET'}`);
