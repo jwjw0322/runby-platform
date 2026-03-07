@@ -19,11 +19,13 @@ VALUES (
 ON CONFLICT (id) DO NOTHING;
 
 -- Also create a minimal config row so any lookups don't break
-INSERT INTO client_config (client_id, vertical_id, business_name, ai_name)
+INSERT INTO client_config (client_id, vertical_id, business_name, ai_name, owner_email, timezone)
 VALUES (
   '00000000-0000-0000-0000-000000000001',
   'internal',
   'RunBy AI',
-  'RunBy Assistant'
+  'RunBy Assistant',
+  'jonathan@runbyai.co',
+  'America/New_York'
 )
 ON CONFLICT (client_id) DO NOTHING;
