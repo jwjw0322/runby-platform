@@ -383,6 +383,38 @@ nav.scrolled {
   animation: fadeUp 1s ease-out 1s both;
 }
 
+/* Embedded animation iframes */
+.hero-animation-iframe {
+  width: 100%;
+  border: none;
+  display: block;
+  background: transparent;
+}
+.phone-iframe {
+  height: 700px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.followup-iframe {
+  height: 680px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.animation-showcase {
+  padding: 4rem 6%;
+}
+.animation-embed {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .phone-iframe { height: 620px; }
+  .followup-iframe { height: 600px; max-width: 100%; }
+}
+
 .hero-phone-mockup {
   position: relative;
   width: 280px;
