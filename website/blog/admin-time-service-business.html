@@ -13,7 +13,8 @@
 <meta property="og:type" content="article">
 <title>The Hidden $50,000 Problem: Why Service Business Owners Waste 16 Hours a Week on Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -45,53 +46,6 @@
     z-index: 9999;
   }
 
-  /* ===== NAV ===== */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 1.2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    backdrop-filter: blur(20px);
-    background: rgba(13, 13, 26, 0.8);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem;
-    color: var(--white);
-    text-decoration: none;
-    letter-spacing: -0.02em;
-  }
-
-  .logo span { color: var(--accent); }
-
-  .nav-links { display: flex; gap: 2rem; align-items: center; }
-  .nav-links a {
-    color: var(--gray);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--white); }
-
-  .nav-cta {
-    background: var(--accent) !important;
-    color: var(--white) !important;
-    padding: 0.6rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600 !important;
-    transition: transform 0.2s, box-shadow 0.3s !important;
-  }
-  .nav-cta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
-  }
 
   /* ===== ARTICLE LAYOUT ===== */
   main {
@@ -354,48 +308,6 @@
     margin: 0;
   }
 
-  /* ===== FOOTER ===== */
-  footer {
-    border-top: 1px solid rgba(255,255,255,0.04);
-    padding: 3rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem;
-    color: var(--white);
-  }
-
-  .footer-brand span { color: var(--accent); }
-
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-  }
-
-  .footer-links a {
-    color: var(--gray);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.3s;
-  }
-
-  .footer-links a:hover { color: var(--white); }
-
-  .footer-copy {
-    color: var(--gray);
-    font-size: 0.8rem;
-    width: 100%;
-    text-align: center;
-    margin-top: 1rem;
-  }
 
   /* ===== MOBILE ===== */
   @media (max-width: 768px) {
@@ -408,18 +320,39 @@
 </head>
 <body>
 
+<!-- Cursor Glow -->
+<div class="cursor-glow"></div>
+
 <!-- NAV -->
 <nav>
   <a href="/" class="logo">Run<span>By</span></a>
-  <div class="nav-links">
-    <a href="/about">About</a>
+  <div class="nav-center">
     <a href="/#features">Features</a>
-    <a href="/how-it-works">How It Works</a>
     <a href="/pricing">Pricing</a>
-    <a href="/contact">Contact</a>
-    <a href="/pricing" class="nav-cta">Get Started</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/about">About</a>
+    <div class="nav-dropdown">
+      <a href="#" class="nav-dropdown-trigger" onclick="return false;">Resources <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+      <div class="nav-dropdown-menu">
+        <a href="/blog">Blog</a>
+        <a href="/calculator">ROI Calculator</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </div>
   </div>
+  <a href="/pricing" class="nav-cta desktop">Get Started</a>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
 </nav>
+<div class="nav-mobile">
+  <a href="/#features">Features</a>
+  <a href="/pricing">Pricing</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/about">About</a>
+  <a href="/blog">Blog</a>
+  <a href="/calculator">ROI Calculator</a>
+  <a href="/contact">Contact</a>
+  <a href="/pricing" class="nav-cta">Get Started</a>
+</div>
 
 <main>
   <div class="article-container">
@@ -726,18 +659,37 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">Run<span>By</span></div>
-  <div class="footer-links">
-    <a href="/about">About</a>
-    <a href="/#features">Features</a>
-    <a href="/how-it-works">How It Works</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/contact">Contact</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/terms">Terms</a>
+  <div class="footer-top">
+    <div class="footer-brand-section">
+      <div class="footer-brand">Run<span>By</span></div>
+      <p class="footer-tagline">AI-powered staff for service businesses. Stop doing admin. Start growing.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/#features">Features</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/how-it-works">How It Works</a>
+      <a href="/calculator">ROI Calculator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="/about">About</a>
+      <a href="/blog">Blog</a>
+      <a href="/contact">Contact</a>
+      <a href="/referral">Referrals</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+    </div>
   </div>
-  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved.</div>
+  </div>
 </footer>
+
+<script src="/scripts.js"></script>
 
 </body>
 </html>

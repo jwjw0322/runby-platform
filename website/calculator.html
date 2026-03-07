@@ -7,118 +7,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ROI Calculator - RunBy AI Staff Platform</title>
+  <link rel="stylesheet" href="/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --dark: #0d0d1a;
-      --accent: #e94560;
-      --blue: #4361ee;
-      --white: #ffffff;
-      --gray: #8b8b9e;
-      --text: #c8c8d8;
-      --green: #10b981;
-    }
-
     html, body {
       width: 100%;
       height: 100%;
     }
 
-    body {
-      background-color: var(--dark);
-      color: var(--text);
-      font-family: 'Outfit', sans-serif;
-      line-height: 1.6;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.02) 0px,
-          rgba(255, 255, 255, 0.02) 1px,
-          transparent 1px,
-          transparent 2px
-        );
-      pointer-events: none;
-      z-index: 1;
-    }
-
     main {
       position: relative;
       z-index: 2;
-    }
-
-    /* Navigation */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--white);
-      text-decoration: none;
-      letter-spacing: -0.5px;
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--white);
-    }
-
-    .nav-cta {
-      background: linear-gradient(135deg, var(--accent), #ff1744);
-      color: var(--white) !important;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(233, 69, 96, 0.3);
     }
 
     /* Page Header */
@@ -127,29 +28,7 @@
       padding: 3rem 2rem;
       max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .page-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .page-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.5rem;
-      color: var(--white);
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-
-    .page-subtitle {
-      font-size: 1.1rem;
-      color: var(--gray);
-      max-width: 600px;
-      margin: 0 auto;
+      margin-top: 4rem;
     }
 
     /* Main Content */
@@ -528,50 +407,6 @@
       box-shadow: 0 10px 25px rgba(233, 69, 96, 0.3);
     }
 
-    /* Footer */
-    footer {
-      background: rgba(0, 0, 0, 0.3);
-      border-top: 1px solid rgba(139, 139, 158, 0.2);
-      padding: 3rem 2rem;
-      margin-top: 4rem;
-      text-align: center;
-    }
-
-    .footer-brand {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.3rem;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.5px;
-    }
-
-    .footer-brand span {
-      color: var(--accent);
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-links a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.3s ease;
-    }
-
-    .footer-links a:hover {
-      color: var(--white);
-    }
-
-    .footer-copy {
-      color: var(--gray);
-      font-size: 0.85rem;
-    }
 
     /* Responsive */
     @media (max-width: 1024px) {
@@ -690,17 +525,33 @@
 <body>
   <nav>
     <a href="/" class="logo">Run<span>By</span></a>
-    <div class="nav-links">
-      <a href="/about">About</a>
+    <div class="nav-center">
       <a href="/#features">Features</a>
-      <a href="/how-it-works">How It Works</a>
       <a href="/pricing">Pricing</a>
-      <a href="/contact">Contact</a>
-      <a href="/blog">Blog</a>
-      <a href="/calculator">ROI Calculator</a>
-      <a href="/pricing" class="nav-cta">Get Started</a>
+      <a href="/how-it-works">How It Works</a>
+      <a href="/about">About</a>
+      <div class="nav-dropdown">
+        <a href="#" class="nav-dropdown-trigger" onclick="return false;">Resources <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+        <div class="nav-dropdown-menu">
+          <a href="/blog">Blog</a>
+          <a href="/calculator">ROI Calculator</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
     </div>
+    <a href="/pricing" class="nav-cta desktop">Get Started</a>
+    <div class="nav-hamburger"><span></span><span></span><span></span></div>
   </nav>
+  <div class="nav-mobile">
+    <a href="/#features">Features</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/about">About</a>
+    <a href="/blog">Blog</a>
+    <a href="/calculator">ROI Calculator</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
 
   <main>
     <div class="page-header">
@@ -879,20 +730,38 @@
   </main>
 
   <footer>
-    <div class="footer-brand">Run<span>By</span></div>
-    <div class="footer-links">
-      <a href="/about">About</a>
-      <a href="/#features">Features</a>
-      <a href="/how-it-works">How It Works</a>
-      <a href="/pricing">Pricing</a>
-      <a href="/contact">Contact</a>
-      <a href="/blog">Blog</a>
-      <a href="/calculator">ROI Calculator</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
+    <div class="footer-top">
+      <div class="footer-brand-section">
+        <div class="footer-brand">Run<span>By</span></div>
+        <p class="footer-tagline">AI-powered staff for service businesses. Stop doing admin. Start growing.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="/#features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/how-it-works">How It Works</a>
+        <a href="/calculator">ROI Calculator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/contact">Contact</a>
+        <a href="/referral">Referrals</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </div>
     </div>
-    <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved.</div>
+    </div>
   </footer>
+
+  <div id="cursor-glow"></div>
+  <script src="/scripts.js"></script>
 
   <script>
     // Calculator Elements

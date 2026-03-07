@@ -7,38 +7,14 @@
 <meta name="description" content="Welcome to RunBy! Your AI staff is being set up.">
 <link rel="canonical" href="https://runbyai.co/success">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --dark: #0d0d1a;
-    --accent: #e94560;
-    --accent-glow: rgba(233, 69, 96, 0.3);
-    --blue: #4361ee;
-    --white: #ffffff;
-    --gray: #8b8b9e;
-    --text: #c8c8d8;
-    --green: #10b981;
-  }
-
-  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--dark);
-    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
   }
 
   nav {
@@ -47,15 +23,6 @@
     justify-content: center;
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
-
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem;
-    color: var(--white);
-    text-decoration: none;
-    letter-spacing: -0.02em;
-  }
-  .logo span { color: var(--accent); }
 
   .success-page {
     flex: 1;
@@ -209,14 +176,6 @@
     border-color: rgba(255,255,255,0.4);
     background: rgba(255,255,255,0.04);
   }
-
-  footer {
-    border-top: 1px solid rgba(255,255,255,0.04);
-    padding: 2rem;
-    text-align: center;
-    color: var(--gray);
-    font-size: 0.8rem;
-  }
 </style>
 
 <!-- Google Analytics -->
@@ -279,6 +238,9 @@
 </div>
 
 <footer>&copy; 2026 RunBy, Inc. All rights reserved.</footer>
+
+<div id="cursor-glow"></div>
+<script src="/scripts.js"></script>
 
 </body>
 </html>

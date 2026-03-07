@@ -12,6 +12,32 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 const SENDGRID_API_URL = 'https://api.sendgrid.com/v3/mail/send';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
+function getAdminEmail() {
+  return process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
+}
+
+function getBriefingFromEmail(recipientEmail) {
+  const explicitFrom = process.env.BRIEFING_FROM_EMAIL || process.env.ADMIN_NOTIFICATION_FROM_EMAIL;
+  if (explicitFrom) return explicitFrom;
+
+  const defaultFrom = process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com';
+  if (defaultFrom.toLowerCase() !== String(recipientEmail || '').toLowerCase()) {
+    return defaultFrom;
+  }
+
+  // Avoid self-sending from the same inbox address when no dedicated sender is configured.
+  return 'support@runbyai.co';
+}
+
+function appendDeliveryLog(entry) {
+  const logsDir = path.join(__dirname, '..', 'reports', 'cao', 'logs');
+  if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+
+  const date = new Date().toISOString().split('T')[0];
+  const logPath = path.join(logsDir, `delivery_${date}.log`);
+  fs.appendFileSync(logPath, JSON.stringify({ timestamp: new Date().toISOString(), ...entry }) + '\n');
+}
+
 /**
  * Main Ross function — gathers intelligence from all agents and sends a morning briefing
  */
@@ -456,7 +482,8 @@ Respond in JSON format:
  * Send the morning briefing email
  */
 async function sendBriefingEmail(briefing, rawData) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
+  const adminEmail = getAdminEmail();
+  const fromEmail = getBriefingFromEmail(adminEmail);
 
   // Mood emoji and color
   const moodConfig = {
@@ -529,8 +556,12 @@ async function sendBriefingEmail(briefing, rawData) {
       subject: `${mood.emoji} RunBy Daily Briefing — ${today} (Score: ${briefing.health_score}/100)`,
     }],
     from: {
-      email: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
+      email: fromEmail,
       name: 'Ross @ RunBy',
+    },
+    reply_to: {
+      email: adminEmail,
+      name: 'Jon @ RunBy',
     },
     content: [{
       type: 'text/html',
@@ -593,10 +624,29 @@ async function sendBriefingEmail(briefing, rawData) {
 
   if (!response.ok) {
     const errorBody = await response.text();
+    appendDeliveryLog({
+      type: 'ross-briefing',
+      recipient: adminEmail,
+      from: fromEmail,
+      subject: emailContent.personalizations[0].subject,
+      status: response.status,
+      outcome: 'failed',
+      error: errorBody,
+    });
     throw new Error(`SendGrid Ross briefing error ${response.status}: ${errorBody}`);
   }
 
-  console.log(`[Ross] Briefing email sent to ${adminEmail}`);
+  appendDeliveryLog({
+    type: 'ross-briefing',
+    recipient: adminEmail,
+    from: fromEmail,
+    subject: emailContent.personalizations[0].subject,
+    status: response.status,
+    outcome: 'accepted',
+    message_id: response.headers.get('x-message-id') || null,
+  });
+
+  console.log(`[Ross] Briefing email accepted by SendGrid for ${adminEmail} (from ${fromEmail})`);
   return true;
 }
 
@@ -604,7 +654,8 @@ async function sendBriefingEmail(briefing, rawData) {
  * Send an error alert if Ross itself fails
  */
 async function sendErrorAlert(errorMessage) {
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.OWNER_EMAIL || 'jonathan@runbyai.co';
+  const adminEmail = getAdminEmail();
+  const fromEmail = getBriefingFromEmail(adminEmail);
 
   const emailContent = {
     personalizations: [{
@@ -612,8 +663,12 @@ async function sendErrorAlert(errorMessage) {
       subject: `🔴 RunBy — Ross Error — Daily Briefing Failed`,
     }],
     from: {
-      email: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
+      email: fromEmail,
       name: 'Ross @ RunBy',
+    },
+    reply_to: {
+      email: adminEmail,
+      name: 'Jon @ RunBy',
     },
     content: [{
       type: 'text/html',
@@ -631,13 +686,22 @@ async function sendErrorAlert(errorMessage) {
     }],
   };
 
-  await fetch(SENDGRID_API_URL, {
+  const response = await fetch(SENDGRID_API_URL, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(emailContent),
+  });
+
+  appendDeliveryLog({
+    type: 'ross-error-alert',
+    recipient: adminEmail,
+    from: fromEmail,
+    subject: emailContent.personalizations[0].subject,
+    status: response.status,
+    outcome: response.ok ? 'accepted' : 'failed',
   });
 }
 

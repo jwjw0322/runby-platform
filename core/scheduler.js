@@ -6,9 +6,24 @@ const cron = require('node-cron');
 const { createClient } = require('@supabase/supabase-js');
 const { sendCheckInEmail, sendInvoiceReminderEmail, sendSeasonalReminderEmail } = require('./email-sender');
 const { markOverdueInvoices } = require('./invoice-handler');
+const { runDailyBriefing } = require('./chief-agent-officer');
 const { runClientBriefings } = require('./client-briefing');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+
+/**
+ * JOB 0: Admin daily briefing (daily at 5:55 AM ET)
+ * Send Ross's executive summary to the admin email before the client briefings run
+ */
+cron.schedule('55 5 * * *', async () => {
+  console.log('[Scheduler] Starting admin daily briefing...');
+  try {
+    const result = await runDailyBriefing();
+    console.log(`[Scheduler] Admin briefing status: ${result.status}`);
+  } catch (err) {
+    console.error('[Scheduler] Admin briefing job error:', err.message);
+  }
+}, { timezone: 'America/New_York' });
 
 /**
  * JOB 1: Check-in emails (daily at 8:00 AM)
