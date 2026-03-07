@@ -1,7 +1,7 @@
 {
   "name": "runby-platform",
   "version": "1.0.0",
-  "description": "RunBy AI receptionist platform",
+  "description": "RunBy AI-powered staff platform for service businesses",
   "main": "core/server.js",
   "scripts": {
     "start": "node core/server.js",
@@ -9,10 +9,13 @@
     "create-assistant": "node core/vapi-config.js"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "@sentry/node": "^8.0.0",
     "@supabase/supabase-js": "^2.39.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "node-cron": "^4.2.1",
+    "stripe": "^14.0.0",
     "twilio": "^4.20.0"
   },
   "devDependencies": {
