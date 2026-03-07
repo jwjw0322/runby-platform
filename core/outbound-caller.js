@@ -33,11 +33,11 @@ async function makeCall({ phone, contact_name, business_name }) {
   // The sales prompt already has outbound call instructions — the firstMessage sets the tone
   let firstMessage;
   if (contact_name && business_name) {
-    firstMessage = `Hi, is this ${contact_name}? Hey ${contact_name}, this is the RunBy team calling. We help service businesses like ${business_name} handle calls with an AI receptionist. Do you have a couple minutes? I think this could really help your business.`;
+    firstMessage = `Hi, is this ${contact_name}? Hey ${contact_name}, this is the RunBy team calling. We give service businesses like ${business_name} AI-powered staff that handles operations 24/7 — for a fraction of the cost of a real hire. Do you have a couple minutes?`;
   } else if (contact_name) {
-    firstMessage = `Hi, is this ${contact_name}? Hey ${contact_name}, this is the RunBy team. We help service businesses handle calls with an AI receptionist so they never miss a customer. Do you have a couple minutes?`;
+    firstMessage = `Hi, is this ${contact_name}? Hey ${contact_name}, this is the RunBy team. We help service businesses stop losing revenue and get their time back with AI-powered staff. Do you have a couple minutes?`;
   } else {
-    firstMessage = `Hi there, this is the RunBy team. We help service businesses handle calls with an AI receptionist so they never miss a customer. Who am I speaking with?`;
+    firstMessage = `Hi there, this is the RunBy team. We give service businesses AI-powered staff that handles calls, bookings, follow-ups, and collections — so owners can stop doing admin and focus on growing. Who am I speaking with?`;
   }
 
   const callPayload = {

@@ -359,7 +359,7 @@ function checkForNewVerticals() {
  * Ask Claude to generate an executive briefing from all the gathered data
  */
 async function generateBriefingWithClaude(data) {
-  const systemPrompt = `You are Ross, the Chief Agent Officer for RunBy, an AI receptionist platform. You oversee a fleet of AI optimization agents that improve call-handling prompts daily.
+  const systemPrompt = `You are Ross, the Chief Agent Officer for RunBy, an AI staff platform. You oversee a fleet of AI optimization agents that improve call-handling prompts daily.
 
 Write a concise, executive-quality morning briefing for the CEO (Jon). Be direct, highlight what matters, flag problems, and celebrate wins. Use a professional but warm tone.
 

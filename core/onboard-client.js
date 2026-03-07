@@ -30,7 +30,7 @@ async function onboardClient() {
   const serviceArea = await ask('Service area (e.g., Broward County): ');
   const services = await ask('Services (comma-separated): ');
   const businessHours = await ask('Business hours (e.g., Mon-Fri 8AM-6PM, Sat 9AM-2PM): ');
-  const aiName = await ask('AI receptionist name (default: Alex): ') || 'Alex';
+  const aiName = await ask('AI staff name (default: Alex): ') || 'Alex';
   const timezone = await ask('Timezone (default: America/New_York): ') || 'America/New_York';
   const areaCode = await ask('Preferred area code for phone number (e.g., 954): ');
 

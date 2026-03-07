@@ -1,0 +1,20 @@
+{
+  "emergency_keywords": [
+    "roof leak", "structural damage", "water intrusion", "tree fell",
+    "foundation crack", "ceiling collapse", "water damage", "mold"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["roof leak", "structural damage", "water intrusion", "tree fell on house"],
+    "urgent": ["foundation crack", "ceiling damage", "water damage"],
+    "standard": ["kitchen remodel", "bathroom remodel", "painting", "flooring"],
+    "low": ["general inquiry", "pricing question", "consultation"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": false,
+    "booking_buffer_minutes": 60,
+    "max_daily_bookings": 8,
+    "default_appointment_duration_minutes": 120,
+    "estimate_first": true
+  }
+}

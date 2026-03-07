@@ -58,7 +58,7 @@ async function createOnboardingAssistant() {
                 },
                 ai_name: {
                   type: 'string',
-                  description: 'Preferred name for the AI receptionist (default: Alex)',
+                  description: 'Preferred name for the AI staff (default: Alex)',
                 },
                 timezone: {
                   type: 'string',
@@ -79,7 +79,7 @@ async function createOnboardingAssistant() {
       provider: 'vapi',
       voiceId: 'Emma',
     },
-    firstMessage: "Hi there! Thanks for calling RunBy. I'm here to help you get your AI receptionist set up. It'll take about five to ten minutes — I just need to grab some details about your business. Sound good?",
+    firstMessage: "Hi there! Thanks for calling RunBy. I'm here to help you get your AI staff set up. It'll take about five to ten minutes — I just need to grab some details about your business. Sound good?",
     endCallMessage: "Thanks so much for signing up with RunBy! You should receive a confirmation email shortly. Our team will review everything and get you all set up. Have a great day!",
     serverUrl: `${process.env.SERVER_URL}/webhook/vapi`,
     recordingEnabled: true,

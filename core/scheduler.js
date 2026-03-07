@@ -6,6 +6,7 @@ const cron = require('node-cron');
 const { createClient } = require('@supabase/supabase-js');
 const { sendCheckInEmail, sendInvoiceReminderEmail, sendSeasonalReminderEmail } = require('./email-sender');
 const { markOverdueInvoices } = require('./invoice-handler');
+const { runClientBriefings } = require('./client-briefing');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -289,5 +290,19 @@ cron.schedule('30 8 * * *', async () => {
     console.error('[Scheduler] Seasonal reminder job error:', err.message);
   }
 });
+
+/**
+ * JOB 4: Client daily briefings (daily at 6:00 AM)
+ * Send each active business owner an AI-generated morning briefing about their business
+ */
+cron.schedule('0 6 * * *', async () => {
+  console.log('[Scheduler] Starting client daily briefings...');
+  try {
+    const result = await runClientBriefings();
+    console.log(`[Scheduler] Client briefings: ${result.sent || 0} sent, ${result.failed || 0} failed`);
+  } catch (err) {
+    console.error('[Scheduler] Client briefings job error:', err.message);
+  }
+}, { timezone: 'America/New_York' });
 
 console.log('[Scheduler] Cron jobs initialized');

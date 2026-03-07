@@ -10,7 +10,7 @@ const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
-// Industries that are strong fits for AI receptionists
+// Industries that are strong fits for AI staffs
 const EXPANSION_CATEGORIES = [
   'home services',
   'healthcare & wellness',
@@ -146,10 +146,10 @@ function loadFile(verticalId, filename) {
  * Ask Claude to design a new vertical
  */
 async function designVerticalWithClaude(existingVerticals, referencePrompt, referenceRules) {
-  const systemPrompt = `You are an expert at building AI receptionist systems for service businesses. You design new industry verticals for an AI phone receptionist platform called RunBy.
+  const systemPrompt = `You are an expert at building AI staff systems for service businesses. You design new industry verticals for an AI-powered staff platform called RunBy.
 
 Each vertical needs:
-1. A prompt.md — the AI receptionist's personality, knowledge, and call-handling instructions
+1. A prompt.md — the AI staff's personality, knowledge, and call-handling instructions
 2. A rules.json — emergency keywords, triage priorities, and business rules
 3. Seasonal reminders — proactive outreach timing for that industry
 

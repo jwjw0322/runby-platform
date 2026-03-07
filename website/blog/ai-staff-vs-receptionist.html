@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="AI Staff vs. Hiring a Receptionist: The Real Cost Comparison">
+<meta name="description" content="Most service business owners think hiring a receptionist is cheaper than AI. We break down the actual numbers — salary, benefits, taxes, turnover.">
+<meta property="og:title" content="AI Staff vs. Hiring a Receptionist: The Real Cost Comparison">
+<meta property="og:description" content="Most service business owners think hiring a receptionist is cheaper than AI. We break down the actual numbers.">
+<meta property="og:type" content="article">
+<title>AI Staff vs. Hiring a Receptionist: The Real Cost Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --accent: #e94560;
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== GRAIN OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== ARTICLE LAYOUT ===== */
+  main {
+    padding-top: 8rem;
+    min-height: 100vh;
+  }
+
+  .article-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .article-category {
+    display: inline-block;
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--blue);
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .article-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .article-meta div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .article-meta strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ===== ARTICLE CONTENT ===== */
+  .article-content {
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .article-content h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .article-content h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .article-content ul, .article-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-content li {
+    margin-bottom: 0.8rem;
+  }
+
+  .article-content strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ===== COMPARISON TABLE ===== */
+  .comparison-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .comparison-table th {
+    background: rgba(233, 69, 96, 0.1);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .comparison-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .comparison-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .comparison-table .label {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .comparison-table .receptionist { color: var(--gray); }
+  .comparison-table .runby { color: var(--blue); }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .highlight-box {
+    background: rgba(67, 97, 238, 0.08);
+    border-left: 4px solid var(--blue);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+
+  .highlight-box strong {
+    color: var(--blue);
+  }
+
+  /* ===== CTA SECTION ===== */
+  .article-cta {
+    margin: 4rem 0;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.08), rgba(67, 97, 238, 0.08));
+    border: 1px solid rgba(233, 69, 96, 0.15);
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .article-cta h3 {
+    margin-top: 0;
+  }
+
+  .article-cta p {
+    margin-bottom: 1.5rem;
+    color: var(--gray);
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== RELATED ARTICLES ===== */
+  .related-articles {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .related-articles h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .related-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+  }
+
+  .related-card:hover {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.04);
+    transform: translateY(-4px);
+  }
+
+  .related-card h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .related-card p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin: 0;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .article-container { padding: 0 1.5rem 3rem; }
+    .comparison-table { font-size: 0.9rem; }
+    .comparison-table th, .comparison-table td { padding: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<main>
+  <div class="article-container">
+    <article>
+      <div class="article-header">
+        <span class="article-category">Cost Comparison</span>
+        <h1 class="article-title">AI Staff vs. Hiring a Receptionist: The Real Cost Comparison for Service Businesses</h1>
+      </div>
+
+      <div class="article-meta">
+        <div>
+          <strong>Author</strong>
+          RunBy Team
+        </div>
+        <div>
+          <strong>Published</strong>
+          March 2026
+        </div>
+        <div>
+          <strong>Read Time</strong>
+          8 minutes
+        </div>
+      </div>
+
+      <div class="article-content">
+        <p>
+          Every day, we hear the same thing from service business owners: "Hiring a receptionist is cheaper than paying for AI automation."
+        </p>
+
+        <p>
+          The math seems simple at first: a part-time receptionist might cost $25-30k per year, and that's obviously cheaper than running an AI system, right?
+        </p>
+
+        <p>
+          Wrong. And it's not even close.
+        </p>
+
+        <p>
+          When you account for salary, benefits, taxes, equipment, training, turnover, and the hidden productivity costs of a part-time employee, the real cost of hiring a receptionist skyrockets. We're going to break down the actual numbers so you can make an informed decision.
+        </p>
+
+        <h2>The True Cost of a Receptionist: Hidden Line Items Nobody Talks About</h2>
+
+        <p>
+          Most service business owners only think about salary when evaluating hiring costs. That's a massive blind spot.
+        </p>
+
+        <p>
+          Here's what a typical receptionist actually costs:
+        </p>
+
+        <ul>
+          <li><strong>Base Salary:</strong> $25,000 - $35,000/year for part-time (20-30 hrs/week)</li>
+          <li><strong>Payroll Taxes (FICA, FUTA, SUTA):</strong> ~15% of gross = $3,750 - $5,250/year</li>
+          <li><strong>Health Insurance (if you offer it):</strong> $4,000 - $8,000/year</li>
+          <li><strong>Workers Compensation Insurance:</strong> $800 - $1,500/year</li>
+          <li><strong>Recruiting & Hiring Costs:</strong> Job postings, background checks, interviews = $1,500 - $3,000</li>
+          <li><strong>Training & Onboarding:</strong> Your time + materials = $2,000 - $4,000</li>
+          <li><strong>Office Equipment (desk, computer, phone, supplies):</strong> $1,500 - $2,500</li>
+          <li><strong>Turnover Cost (annual):</strong> 60% turnover = rehiring costs above = $3,000 - $6,000</li>
+        </ul>
+
+        <p>
+          <strong>Total annual cost: $41,550 - $65,750 per year for ONE part-time receptionist.</strong>
+        </p>
+
+        <p>
+          And that's before you account for:
+        </p>
+
+        <ul>
+          <li>Paid time off (vacation, sick days)</li>
+          <li>Productivity gaps while training new hires</li>
+          <li>The cost of handling customer calls that go unanswered because your receptionist is on break, sick, or dealing with personal issues</li>
+          <li>Service quality inconsistency (different people handling calls = different customer experience)</li>
+          <li>The burden of managing, scheduling, and covering shifts when they don't show up</li>
+        </ul>
+
+        <h2>How RunBy Actually Works (And What It Costs)</h2>
+
+        <p>
+          RunBy is an AI employee that:
+        </p>
+
+        <ul>
+          <li>Answers every call, 24/7/365</li>
+          <li>Books appointments directly into your calendar</li>
+          <li>Never takes a day off</li>
+          <li>Never makes a mistake on customer details</li>
+          <li>Learns your business, your pricing, your tone, and your processes</li>
+          <li>Costs $299 - $599 per month depending on volume</li>
+        </ul>
+
+        <p>
+          That's <strong>$3,588 - $7,188 per year</strong> for 24/7 coverage that scales with your business.
+        </p>
+
+        <p>
+          Compare that to a receptionist who:
+        </p>
+
+        <ul>
+          <li>Works 20-30 hours per week (meaning ~25% of your incoming calls go unanswered)</li>
+          <li>Costs $41,550 - $65,750 per year in total compensation</li>
+          <li>Takes days off, sick days, and vacations</li>
+          <li>Makes mistakes, forgets details, and handles customers inconsistently</li>
+          <li>Needs management, training, and constant supervision</li>
+        </ul>
+
+        <h2>The Head-to-Head Comparison</h2>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="receptionist">Part-Time Receptionist</th>
+              <th class="runby">RunBy AI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="label">Annual Cost</td>
+              <td class="receptionist">$41,550 - $65,750</td>
+              <td class="runby">$3,588 - $7,188</td>
+            </tr>
+            <tr>
+              <td class="label">Monthly Cost</td>
+              <td class="receptionist">$3,463 - $5,479</td>
+              <td class="runby">$299 - $599</td>
+            </tr>
+            <tr>
+              <td class="label">Availability</td>
+              <td class="receptionist">20-30 hrs/week (20-25% coverage)</td>
+              <td class="runby">24/7/365 (100% coverage)</td>
+            </tr>
+            <tr>
+              <td class="label">Call Handling</td>
+              <td class="receptionist">Manual, error-prone, inconsistent</td>
+              <td class="runby">Instant, trained on your business, consistent</td>
+            </tr>
+            <tr>
+              <td class="label">Appointment Booking</td>
+              <td class="receptionist">Manual entry (transcription errors)</td>
+              <td class="runby">Direct calendar integration, no errors</td>
+            </tr>
+            <tr>
+              <td class="label">Time Off</td>
+              <td class="receptionist">Unpredictable absences</td>
+              <td class="runby">Never takes time off</td>
+            </tr>
+            <tr>
+              <td class="label">Training</td>
+              <td class="receptionist">Weeks-long onboarding, continuous management</td>
+              <td class="runby">48-hour setup, improves over time</td>
+            </tr>
+            <tr>
+              <td class="label">Turnover Impact</td>
+              <td class="receptionist">60% annual turnover = constant rehiring</td>
+              <td class="runby">No turnover, no rehiring costs</td>
+            </tr>
+            <tr>
+              <td class="label">Scalability</td>
+              <td class="receptionist">Fixed capacity, more hours = more cost</td>
+              <td class="runby">Scales with your business</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>The Real Math: What You're Actually Saving</h2>
+
+        <div class="highlight-box">
+          <p>
+            <strong>By choosing RunBy over a part-time receptionist, you save $34,362 - $58,562 per year.</strong>
+          </p>
+          <p>
+            That's before accounting for the added revenue you'll capture from 24/7 call coverage and the time you'll reclaim from not managing an employee.
+          </p>
+        </div>
+
+        <h2>What About Better Availability? What If You Go Full-Time?</h2>
+
+        <p>
+          Some owners think, "What if I just hire a full-time receptionist to get better coverage?"
+        </p>
+
+        <p>
+          A full-time receptionist ($40,000 - $55,000 salary) would cost:
+        </p>
+
+        <ul>
+          <li>Base salary: $40,000 - $55,000</li>
+          <li>Payroll taxes: ~$6,000 - $8,250</li>
+          <li>Health insurance: $8,000 - $12,000</li>
+          <li>Workers comp: $1,200 - $2,000</li>
+          <li>All other costs above: ~$7,000 - $10,000</li>
+        </ul>
+
+        <p>
+          <strong>Total: $62,200 - $87,250 per year</strong> — and you still only get 40 hours a week (8 hours a day) of coverage.
+        </p>
+
+        <p>
+          RunBy gives you better coverage (24/7), zero employee management, and costs $3,588 - $7,188 per year. Not even a comparison.
+        </p>
+
+        <h2>What If You Need Both? (You Don't, But...)</h2>
+
+        <p>
+          Some larger service businesses run both — a receptionist for in-person duties and an answering service for after-hours calls.
+        </p>
+
+        <p>
+          That's a third option, and it would cost you the full receptionist cost PLUS $200-400/month for an answering service. So you're looking at $50,000+ annually for less capability than RunBy alone provides.
+        </p>
+
+        <h2>The Hidden Productivity Gains</h2>
+
+        <p>
+          We've been focused on direct costs, but there's another massive advantage: what YOU get back.
+        </p>
+
+        <p>
+          With a part-time receptionist, you're now responsible for:
+        </p>
+
+        <ul>
+          <li>Covering calls when they're not there</li>
+          <li>Managing their schedule and time off requests</li>
+          <li>Training them on your business</li>
+          <li>Dealing with inconsistencies and mistakes</li>
+          <li>Finding a replacement when (not if) they leave</li>
+        </ul>
+
+        <p>
+          That's a minimum of 3-5 hours per week of YOUR management time. At a service business owner's effective hourly rate ($100-250/hour), that's $15,600 - $65,000 per year in hidden management costs.
+        </p>
+
+        <p>
+          RunBy eliminates all of that. Your AI employee handles everything, improves over time, and requires zero management.
+        </p>
+
+        <h2>The Bottom Line</h2>
+
+        <p>
+          The "hire a receptionist" strategy looks cheap until you add up all the costs. Once you do the real math:
+        </p>
+
+        <ul>
+          <li><strong>Part-time receptionist:</strong> $41,550 - $65,750/year + $15,600 - $65,000 in management time = $57,150 - $130,750 real cost</li>
+          <li><strong>RunBy:</strong> $3,588 - $7,188/year with zero management overhead</li>
+        </ul>
+
+        <p>
+          You're looking at saving <strong>$50,000+ per year in actual costs</strong> while getting better service, 24/7 availability, and zero employee management headaches.
+        </p>
+
+        <p>
+          The real question isn't "Can I afford AI automation?" It's "Can I afford not to?"
+        </p>
+
+        <div class="article-cta">
+          <h3>Ready to See the Math for Your Business?</h3>
+          <p>Plug in your actual numbers (call volume, customer types, current staffing) and see exactly how much you could save with RunBy.</p>
+          <a href="/pricing" class="cta-button">Start Your Free Trial →</a>
+        </div>
+
+        <div class="related-articles">
+          <h3>Related Articles</h3>
+          <div class="related-grid">
+            <a href="/blog/hvac-missed-revenue.html" class="related-card">
+              <h4>How HVAC Companies Lose $4,200/Month in Revenue</h4>
+              <p>Where the money goes and how to capture it.</p>
+            </a>
+            <a href="/blog/admin-time-service-business.html" class="related-card">
+              <h4>The Hidden $50,000 Problem</h4>
+              <p>Why you're wasting 16 hours a week on admin.</p>
+            </a>
+            <a href="/blog/roi-ai-employee.html" class="related-card">
+              <h4>The ROI of an AI Employee</h4>
+              <p>Real numbers for service businesses.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+</footer>
+
+</body>
+</html>

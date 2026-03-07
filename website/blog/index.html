@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="RunBy Blog - Insights for Service Business Owners">
+<meta name="description" content="Learn how to stop losing revenue, reduce admin work, and grow your service business faster. Real insights for HVAC, plumbing, and service company owners.">
+<meta property="og:title" content="RunBy Blog - Insights for Service Business Owners">
+<meta property="og:description" content="Learn how to stop losing revenue, reduce admin work, and grow your service business faster.">
+<meta property="og:type" content="website">
+<title>RunBy Blog - Insights for Service Business Owners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --accent: #e94560;
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== GRAIN OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  main {
+    padding-top: 8rem;
+    min-height: 100vh;
+  }
+
+  /* ===== BLOG HEADER ===== */
+  .blog-header {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .blog-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .blog-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .blog-subtitle {
+    font-size: 1.1rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ===== ARTICLES GRID ===== */
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+
+  .article-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .article-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.04);
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  .article-category {
+    display: inline-block;
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--blue);
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .article-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    flex-grow: 1;
+  }
+
+  .article-excerpt {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .article-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+
+  .read-more {
+    color: var(--accent);
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  .article-card:hover .read-more {
+    color: var(--white);
+  }
+
+  /* ===== EMAIL SIGNUP ===== */
+  .email-signup {
+    margin: 5rem 2rem 4rem;
+    padding: 4rem 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.08), rgba(67, 97, 238, 0.08));
+    border: 1px solid rgba(233, 69, 96, 0.15);
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .email-signup h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .email-signup p {
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .email-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .email-form input {
+    flex: 1;
+    padding: 0.85rem 1.2rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+
+  .email-form input::placeholder {
+    color: var(--gray);
+  }
+
+  .email-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .email-form button {
+    padding: 0.85rem 2rem;
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .email-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .articles-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .email-signup { padding: 2rem 1.5rem; }
+    .email-form { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<main>
+  <!-- BLOG HEADER -->
+  <div class="blog-header">
+    <div class="blog-label">RunBy Blog</div>
+    <h1 class="blog-title">Insights for Service Business Owners</h1>
+    <p class="blog-subtitle">Learn how to stop losing revenue, reduce admin work, and grow your business faster. Real insights from HVAC, plumbing, and service company owners.</p>
+  </div>
+
+  <!-- ARTICLES GRID -->
+  <div class="articles-grid">
+    <!-- Article 1 -->
+    <a href="/blog/ai-staff-vs-receptionist.html" class="article-card">
+      <div class="article-meta">
+        <span class="article-category">Cost Comparison</span>
+        <span>March 2026</span>
+      </div>
+      <h2 class="article-title">AI Staff vs. Hiring a Receptionist: The Real Cost Comparison for Service Businesses</h2>
+      <p class="article-excerpt">Most service business owners think hiring a receptionist is cheaper than AI. We break down the actual numbers — salary, benefits, taxes, turnover — and show you the real cost.</p>
+      <div class="article-footer">
+        <span>8 min read</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </a>
+
+    <!-- Article 2 -->
+    <a href="/blog/hvac-missed-revenue.html" class="article-card">
+      <div class="article-meta">
+        <span class="article-category">Revenue Loss</span>
+        <span>March 2026</span>
+      </div>
+      <h2 class="article-title">How HVAC Companies Lose $4,200/Month in Revenue (And How to Stop It)</h2>
+      <p class="article-excerpt">Missed calls, failed follow-ups, and scheduling friction cost HVAC companies thousands every month. Here's exactly where the money goes and how to capture it.</p>
+      <div class="article-footer">
+        <span>8 min read</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </a>
+
+    <!-- Article 3 -->
+    <a href="/blog/admin-time-service-business.html" class="article-card">
+      <div class="article-meta">
+        <span class="article-category">Efficiency</span>
+        <span>March 2026</span>
+      </div>
+      <h2 class="article-title">The Hidden $50,000 Problem: Why Service Business Owners Waste 16 Hours a Week on Admin</h2>
+      <p class="article-excerpt">A time audit reveals the shocking truth: you're spending 2 full working days every week on non-revenue work. Here's what it costs and how to delegate smarter.</p>
+      <div class="article-footer">
+        <span>8 min read</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </a>
+
+    <!-- Article 4 -->
+    <a href="/blog/ai-answering-service-plumbing.html" class="article-card">
+      <div class="article-meta">
+        <span class="article-category">Trends</span>
+        <span>March 2026</span>
+      </div>
+      <h2 class="article-title">Why Plumbing Companies Are Switching to AI Answering Services in 2026</h2>
+      <p class="article-excerpt">Emergency calls don't wait for business hours. Find out why leading plumbing companies are ditching traditional answering services for AI that actually books jobs.</p>
+      <div class="article-footer">
+        <span>8 min read</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </a>
+
+    <!-- Article 5 -->
+    <a href="/blog/roi-ai-employee.html" class="article-card">
+      <div class="article-meta">
+        <span class="article-category">ROI</span>
+        <span>March 2026</span>
+      </div>
+      <h2 class="article-title">The ROI of an AI Employee: Real Numbers for Service Businesses</h2>
+      <p class="article-excerpt">What's the actual return on investing in AI automation? We break down the math: cost savings, time recapture, revenue gains, and payback period.</p>
+      <div class="article-footer">
+        <span>8 min read</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- EMAIL SIGNUP -->
+  <div class="email-signup">
+    <h3>Get Weekly Insights</h3>
+    <p>Join 2,000+ service business owners getting actionable advice on growth, efficiency, and automation.</p>
+    <form class="email-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+      <input type="email" placeholder="your@email.com" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+</footer>
+
+</body>
+</html>

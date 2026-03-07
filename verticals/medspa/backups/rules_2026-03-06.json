@@ -1,0 +1,20 @@
+{
+  "emergency_keywords": [
+    "allergic reaction", "adverse reaction", "swelling", "difficulty breathing",
+    "rash", "infection", "severe pain", "anaphylaxis"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["allergic reaction", "difficulty breathing", "anaphylaxis", "severe swelling"],
+    "urgent": ["adverse reaction", "infection", "severe pain", "rash"],
+    "standard": ["facial", "microneedling", "IV therapy", "body contouring"],
+    "low": ["general inquiry", "pricing question", "consultation request"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": false,
+    "booking_buffer_minutes": 15,
+    "max_daily_bookings": 16,
+    "default_appointment_duration_minutes": 60,
+    "consultation_required_services": ["botox", "dermal fillers", "laser treatments"]
+  }
+}

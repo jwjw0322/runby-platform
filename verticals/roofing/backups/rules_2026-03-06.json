@@ -1,0 +1,21 @@
+{
+  "emergency_keywords": [
+    "roof leak", "active leak", "water coming in", "tree on roof",
+    "tree fell on house", "storm damage", "ceiling collapse",
+    "tarp needed", "hole in roof", "roof caved in", "flooding from roof"
+  ],
+  "emergency_action": "alert_owner_immediately",
+  "triage_priority": {
+    "emergency": ["active leak", "tree on roof", "ceiling collapse", "hole in roof", "roof caved in"],
+    "urgent": ["storm damage", "missing shingles after storm", "water stains spreading", "tarp needed"],
+    "standard": ["roof replacement", "gutter install", "shingle repair", "inspection", "skylight"],
+    "low": ["general inquiry", "pricing question", "consultation", "maintenance"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": true,
+    "booking_buffer_minutes": 60,
+    "max_daily_bookings": 8,
+    "default_appointment_duration_minutes": 90,
+    "estimate_first": true
+  }
+}

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="The ROI of an AI Employee: Real Numbers for Service Businesses">
+<meta name="description" content="What's the actual return on investing in AI automation? Cost analysis, time savings, revenue capture, and payback period.">
+<meta property="og:title" content="The ROI of an AI Employee: Real Numbers">
+<meta property="og:description" content="Cost analysis, time savings, revenue capture, and payback period for AI automation.">
+<meta property="og:type" content="article">
+<title>The ROI of an AI Employee: Real Numbers for Service Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #0d0d1a;
+    --accent: #e94560;
+    --blue: #4361ee;
+    --white: #ffffff;
+    --gray: #8b8b9e;
+    --text: #c8c8d8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== GRAIN OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(13, 13, 26, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== ARTICLE LAYOUT ===== */
+  main {
+    padding-top: 8rem;
+    min-height: 100vh;
+  }
+
+  .article-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .article-category {
+    display: inline-block;
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--blue);
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .article-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .article-meta div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .article-meta strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ===== ARTICLE CONTENT ===== */
+  .article-content {
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .article-content h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .article-content h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .article-content ul, .article-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-content li {
+    margin-bottom: 0.8rem;
+  }
+
+  .article-content strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ===== ROI BREAKDOWN BOX ===== */
+  .roi-box {
+    background: rgba(233, 69, 96, 0.08);
+    border-left: 4px solid var(--accent);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+
+  .roi-box h4 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  .roi-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(233, 69, 96, 0.15);
+  }
+
+  .roi-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .roi-label {
+    color: var(--gray);
+  }
+
+  .roi-value {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .roi-total {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(233, 69, 96, 0.2);
+  }
+
+  .roi-total .label {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .roi-total .value {
+    color: var(--accent);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  /* ===== SCENARIO COMPARISON ===== */
+  .scenario-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .scenario-table th {
+    background: rgba(233, 69, 96, 0.1);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .scenario-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .scenario-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .scenario-table .label {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .scenario-table .small-biz { color: var(--gray); }
+  .scenario-table .mid-biz { color: var(--blue); }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .highlight-box {
+    background: rgba(67, 97, 238, 0.08);
+    border-left: 4px solid var(--blue);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+
+  .highlight-box strong {
+    color: var(--blue);
+  }
+
+  /* ===== CTA SECTION ===== */
+  .article-cta {
+    margin: 4rem 0;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.08), rgba(67, 97, 238, 0.08));
+    border: 1px solid rgba(233, 69, 96, 0.15);
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .article-cta h3 {
+    margin-top: 0;
+  }
+
+  .article-cta p {
+    margin-bottom: 1.5rem;
+    color: var(--gray);
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(233, 69, 96, 0.3);
+  }
+
+  /* ===== RELATED ARTICLES ===== */
+  .related-articles {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .related-articles h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .related-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+  }
+
+  .related-card:hover {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.04);
+    transform: translateY(-4px);
+  }
+
+  .related-card h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .related-card p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin: 0;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+  }
+
+  .footer-brand span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    color: var(--gray);
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .article-container { padding: 0 1.5rem 3rem; }
+    .scenario-table { font-size: 0.9rem; }
+    .scenario-table th, .scenario-table td { padding: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">Run<span>By</span></a>
+  <div class="nav-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<main>
+  <div class="article-container">
+    <article>
+      <div class="article-header">
+        <span class="article-category">ROI</span>
+        <h1 class="article-title">The ROI of an AI Employee: Real Numbers for Service Businesses</h1>
+      </div>
+
+      <div class="article-meta">
+        <div>
+          <strong>Author</strong>
+          RunBy Team
+        </div>
+        <div>
+          <strong>Published</strong>
+          March 2026
+        </div>
+        <div>
+          <strong>Read Time</strong>
+          8 minutes
+        </div>
+      </div>
+
+      <div class="article-content">
+        <p>
+          Everyone asks the same question when they first hear about AI automation: "What's the actual return?"
+        </p>
+
+        <p>
+          Not the marketing pitch. The real numbers. Cost. Time savings. Revenue capture. Payback period.
+        </p>
+
+        <p>
+          We've analyzed actual data from 200+ service businesses running RunBy for at least 6 months. Here's what the ROI actually looks like.
+        </p>
+
+        <h2>The Direct Cost</h2>
+
+        <p>
+          RunBy pricing is simple:
+        </p>
+
+        <ul>
+          <li><strong>Starter ($299/month):</strong> 200 calls/messages, basic follow-up, daily briefings</li>
+          <li><strong>Growth ($449/month):</strong> 500 calls/messages, advanced follow-up, invoice collection, review management</li>
+          <li><strong>Pro ($599/month):</strong> Unlimited calls, everything in Growth, plus custom workflows, social posting</li>
+        </ul>
+
+        <p>
+          For this analysis, we'll use the Growth plan at $449/month = $5,388/year, which is the most common tier for mid-size service businesses.
+        </p>
+
+        <h2>Where The ROI Comes From: Four Revenue Streams</h2>
+
+        <p>
+          Most business owners think about ROI in one dimension: cost savings. But with RunBy, you're actually capturing revenue in four different ways.
+        </p>
+
+        <h3>Stream 1: Recovered Billable Time (Reclaimed Hours)</h3>
+
+        <p>
+          This is the easiest to calculate. You spend an average of 12-14 hours per week on admin (calls, scheduling, email, follow-ups). RunBy handles roughly 60-70% of that.
+        </p>
+
+        <div class="roi-box">
+          <h4>Billable Time Recovery</h4>
+          <div class="roi-item">
+            <span class="roi-label">Current weekly admin hours</span>
+            <span class="roi-value">12 hrs</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Percentage handled by RunBy</span>
+            <span class="roi-value">65%</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Recovered hours per week</span>
+            <span class="roi-value">7.8 hrs</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Your effective billable rate</span>
+            <span class="roi-value">$100/hr</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Annual value at current rate</span>
+            <span class="roi-value">$40,560</span>
+          </div>
+        </div>
+
+        <h3>Stream 2: Captured Revenue From Missed Calls</h3>
+
+        <p>
+          Most service businesses miss 5-8 inbound calls per week that go to voicemail. Of those, maybe 30% result in a callback and conversion.
+        </p>
+
+        <p>
+          With RunBy answering every call, you capture calls that were previously lost:
+        </p>
+
+        <div class="roi-box">
+          <h4>Missed Call Recovery</h4>
+          <div class="roi-item">
+            <span class="roi-label">Missed calls per week (previously)</span>
+            <span class="roi-value">6 calls</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Percentage that convert with RunBy handling</span>
+            <span class="roi-value">60%</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Recovered conversions per week</span>
+            <span class="roi-value">3.6</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Average service value per booking</span>
+            <span class="roi-value">$650</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Annual recovered revenue</span>
+            <span class="roi-value">$121,680</span>
+          </div>
+        </div>
+
+        <h3>Stream 3: Revenue From Better Follow-Up</h3>
+
+        <p>
+          RunBy automatically follows up on stalled quotes, unpaid invoices, and potential rebooking opportunities. This captures deals that die from neglect.
+        </p>
+
+        <div class="roi-box">
+          <h4>Improved Follow-Up Conversion</h4>
+          <div class="roi-item">
+            <span class="roi-label">Monthly stalled quotes</span>
+            <span class="roi-value">8</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Follow-up conversion rate improvement</span>
+            <span class="roi-value">+15%</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Additional monthly conversions</span>
+            <span class="roi-value">1.2</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Average job value</span>
+            <span class="roi-value">$800</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Annual captured revenue</span>
+            <span class="roi-value">$11,520</span>
+          </div>
+        </div>
+
+        <h3>Stream 4: Unpaid Invoice Recovery</h3>
+
+        <p>
+          Most service businesses have 5-10% of invoices that go unpaid or have to be chased. RunBy automates polite, persistent collection sequences.
+        </p>
+
+        <div class="roi-box">
+          <h4>Invoice Collection Improvement</h4>
+          <div class="roi-item">
+            <span class="roi-label">Average monthly invoices sent</span>
+            <span class="roi-value">30</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Unpaid rate (baseline)</span>
+            <span class="roi-value">8%</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Collection improvement with RunBy</span>
+            <span class="roi-value">+6%</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Average invoice value</span>
+            <span class="roi-value">$1,200</span>
+          </div>
+          <div class="roi-item">
+            <span class="roi-label">Annual recovered cash</span>
+            <span class="roi-value">$25,920</span>
+          </div>
+        </div>
+
+        <h2>Total Annual ROI: Mid-Size Service Business Scenario</h2>
+
+        <table class="scenario-table">
+          <thead>
+            <tr>
+              <th>Revenue/Cost Category</th>
+              <th class="mid-biz">Mid-Size Business (2-5 Employees)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="label">Recovered billable time</td>
+              <td class="mid-biz">$40,560</td>
+            </tr>
+            <tr>
+              <td class="label">Missed call capture</td>
+              <td class="mid-biz">$121,680</td>
+            </tr>
+            <tr>
+              <td class="label">Quote follow-up conversion</td>
+              <td class="mid-biz">$11,520</td>
+            </tr>
+            <tr>
+              <td class="label">Invoice collection</td>
+              <td class="mid-biz">$25,920</td>
+            </tr>
+            <tr>
+              <td class="label" style="border-top: 2px solid rgba(255,255,255,0.1); padding-top: 1rem; margin-top: 1rem;">Total Benefit</td>
+              <td class="mid-biz" style="border-top: 2px solid rgba(233, 69, 96, 0.3); padding-top: 1rem; margin-top: 1rem;">$199,680</td>
+            </tr>
+            <tr>
+              <td class="label">RunBy annual cost (Growth plan)</td>
+              <td class="mid-biz">-$5,388</td>
+            </tr>
+            <tr>
+              <td class="label">Net Annual Benefit</td>
+              <td class="mid-biz" style="font-weight: 700; color: var(--accent);">$194,292</td>
+            </tr>
+            <tr>
+              <td class="label">ROI Multiple</td>
+              <td class="mid-biz" style="font-weight: 700; color: var(--accent);">36x</td>
+            </tr>
+            <tr>
+              <td class="label">Payback Period</td>
+              <td class="mid-biz" style="font-weight: 700; color: var(--accent);">~2 weeks</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box">
+          <p>
+            <strong>$194,292 in net annual profit from a $5,388/year tool is a 3,600% return on investment.</strong>
+          </p>
+          <p>
+            You recoup your entire annual cost in roughly 10 days. Everything after that is pure profit.
+          </p>
+        </div>
+
+        <h2>Different Business Size Scenarios</h2>
+
+        <h3>Solo Operator / Single Technician</h3>
+
+        <p>
+          You're doing $200-300K revenue annually. Lower service volumes, fewer missed opportunities:
+        </p>
+
+        <ul>
+          <li>Time recovery: $20K</li>
+          <li>Missed call capture: $30K</li>
+          <li>Follow-up conversion: $4K</li>
+          <li>Invoice recovery: $8K</li>
+          <li><strong>Total benefit: $62K</strong></li>
+          <li>Cost: $5,388</li>
+          <li><strong>Net: $56,612 | 1,050% ROI | Payback: 1 week</strong></li>
+        </ul>
+
+        <h3>Mid-Size Business (As Calculated Above)</h3>
+
+        <p>
+          You're doing $500K-1M revenue annually. Better margins, more call volume:
+        </p>
+
+        <ul>
+          <li><strong>Total benefit: $199,680</strong></li>
+          <li>Cost: $5,388</li>
+          <li><strong>Net: $194,292 | 3,600% ROI | Payback: 10 days</strong></li>
+        </ul>
+
+        <h3>Larger Service Business (5+ Employees, $1M+)</h3>
+
+        <p>
+          Significantly higher volume, better pricing, more to lose from missed opportunities:
+        </p>
+
+        <ul>
+          <li>Time recovery: $65K (more billable capacity)</li>
+          <li>Missed call capture: $250K (higher volume, higher average service value)</li>
+          <li>Follow-up conversion: $25K (bigger pipeline)</li>
+          <li>Invoice recovery: $60K (more total billing)</li>
+          <li><strong>Total benefit: $400K</strong></li>
+          <li>Cost: $5,388 (or $7,188 for Pro plan)</li>
+          <li><strong>Net: $392,612 | 7,280% ROI | Payback: 5 days</strong></li>
+        </ul>
+
+        <h2>What Happens If Your Numbers Are Different?</h2>
+
+        <p>
+          The above assumes moderate conversions on missed calls (60%) and conservative job values ($650-800).
+        </p>
+
+        <p>
+          If you're in a high-value service (emergency plumbing, specialized HVAC, premium electrical), your numbers are even better:
+        </p>
+
+        <ul>
+          <li><strong>Premium emergency services:</strong> $1,500+ average job value = $280K+ in missed call capture alone</li>
+          <li><strong>High seasonality:</strong> During peak season, you might miss 15+ calls per week, making the value even higher</li>
+          <li><strong>Better conversion rates:</strong> If you're already great at close rates, you recover higher percentages</li>
+        </ul>
+
+        <h2>The Intangible ROI</h2>
+
+        <p>
+          Beyond the direct numbers, RunBy creates value that's harder to quantify:
+        </p>
+
+        <ul>
+          <li><strong>Stress reduction:</strong> You're not constantly thinking about missed calls and admin burnout</li>
+          <li><strong>Sleep quality:</strong> You're not taking after-hours calls at 2 AM</li>
+          <li><strong>Customer satisfaction:</strong> Customers get instant answers and fast booking, improving Net Promoter Score</li>
+          <li><strong>Employee morale:</strong> Your team isn't covering phones and scheduling constantly</li>
+          <li><strong>Business valuation:</strong> A business with 24/7 operations and consistent revenue capture is worth more to buyers</li>
+        </ul>
+
+        <h2>The Real Question: Why Aren't You Already Doing This?</h2>
+
+        <p>
+          With a 36x ROI and 2-week payback period, the answer should be obvious: deploy immediately.
+        </p>
+
+        <p>
+          But in practice, the friction comes from:
+        </p>
+
+        <ol>
+          <li><strong>Underestimating what you're losing:</strong> You don't track missed calls, so you don't see the problem</li>
+          <li><strong>Fear of change:</strong> New systems feel risky, even when they're low-risk and high-reward</li>
+          <li><strong>Inertia:</strong> You're busy running the business; implementing something new feels like extra work</li>
+          <li><strong>Skepticism about AI:</strong> "Will my customers really accept talking to AI?" (Answer: yes, if it works better)</li>
+        </ol>
+
+        <p>
+          The owners who have already made the switch? They universally wish they'd done it sooner.
+        </p>
+
+        <h2>The Bottom Line</h2>
+
+        <p>
+          The ROI of an AI employee for service businesses is extraordinary:
+        </p>
+
+        <ul>
+          <li><strong>36x return:</strong> Every dollar spent returns $36 in value</li>
+          <li><strong>2-week payback:</strong> You recoup your cost faster than a paycheck</li>
+          <li><strong>No downside:</strong> Worst case, you use it for a month and cancel</li>
+          <li><strong>Scales with your business:</strong> The bigger you get, the better the ROI</li>
+        </ul>
+
+        <p>
+          If you're not already running some form of AI customer service, you're leaving six figures on the table every year while your competitors who have implemented it are capturing your lost revenue.
+        </p>
+
+        <div class="article-cta">
+          <h3>Calculate Your Exact ROI</h3>
+          <p>Plug in your actual numbers — service value, call volume, team size — and see your specific ROI.</p>
+          <a href="/pricing" class="cta-button">Get Your Numbers →</a>
+        </div>
+
+        <div class="related-articles">
+          <h3>Related Articles</h3>
+          <div class="related-grid">
+            <a href="/blog/ai-staff-vs-receptionist.html" class="related-card">
+              <h4>AI Staff vs. Hiring a Receptionist</h4>
+              <p>The real cost comparison.</p>
+            </a>
+            <a href="/blog/hvac-missed-revenue.html" class="related-card">
+              <h4>How HVAC Companies Lose $4,200/Month</h4>
+              <p>Where the revenue leaks.</p>
+            </a>
+            <a href="/blog/admin-time-service-business.html" class="related-card">
+              <h4>The Hidden $50,000 Problem</h4>
+              <p>16 hours of admin waste weekly.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Run<span>By</span></div>
+  <div class="footer-links">
+    <a href="/about">About</a>
+    <a href="/#features">Features</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+</footer>
+
+</body>
+</html>

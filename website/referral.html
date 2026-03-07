@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referral Program | RunBy</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --dark: #0d0d1a;
+      --accent: #e94560;
+      --blue: #4361ee;
+      --white: #ffffff;
+      --gray: #8b8b9e;
+      --text: #c8c8d8;
+      --green: #10b981;
+    }
+
+    body {
+      background-color: var(--dark);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2' /%3E%3C/filter%3E%3Crect width='60' height='60' fill='%230d0d1a' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 5%;
+      background-color: var(--dark);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      background-color: var(--accent);
+      color: var(--white) !important;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      background-color: #d93d54;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 1.5rem 4%;
+      }
+
+      .nav-links {
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+
+      .logo {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .nav-links a:not(.nav-cta) {
+        display: none;
+      }
+
+      .nav-cta {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Header */
+    .referral-header {
+      text-align: center;
+      padding: 5rem 5% 4rem;
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(233, 69, 96, 0.05) 100%);
+    }
+
+    .header-label {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .referral-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.5rem;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+
+    .referral-header p {
+      font-size: 1.15rem;
+      color: var(--text);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .referral-header {
+        padding: 3rem 4% 2.5rem;
+      }
+
+      .referral-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .referral-header p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .referral-header {
+        padding: 2rem 4% 1.5rem;
+      }
+
+      .referral-header h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+      padding: 5rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .step {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .step:hover {
+      background-color: rgba(255, 255, 255, 0.04);
+      border-color: rgba(67, 97, 238, 0.3);
+    }
+
+    .step-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      color: var(--blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .step h3 {
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .step p {
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .how-it-works {
+        padding: 3rem 4%;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .steps-container {
+        gap: 1.5rem;
+      }
+    }
+
+    /* Referral Form Section */
+    .referral-form-section {
+      padding: 5rem 5%;
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.03) 0%, rgba(233, 69, 96, 0.03) 100%);
+      margin-top: 3rem;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-container h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--white);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.875rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input::placeholder {
+      color: var(--gray);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b8b9e' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 2.5rem;
+    }
+
+    .optional-label {
+      color: var(--gray);
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+      background-color: #d93d54;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(233, 69, 96, 0.2);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      background-color: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-message {
+      display: none;
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .error-message {
+      display: none;
+      background-color: rgba(233, 69, 96, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .referral-form-section {
+        padding: 3rem 4%;
+      }
+
+      .form-container h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      padding: 5rem 5%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .faq-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .faq-items {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .faq-item {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+      width: 100%;
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .faq-toggle {
+      color: var(--blue);
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.open .faq-toggle {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.01);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 500px;
+    }
+
+    .faq-answer p {
+      padding: 1.5rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .faq-section {
+        padding: 3rem 4%;
+      }
+
+      .faq-section h2 {
+        font-size: 2rem;
+      }
+
+      .faq-question {
+        font-size: 0.95rem;
+        padding: 1.25rem;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 3rem 5%;
+      margin-top: 5rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .footer-brand span {
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .footer-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-copy {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      footer {
+        padding: 2rem 4%;
+      }
+
+      .footer-content {
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <!-- Navigation -->
+    <nav>
+      <a href="/" class="logo">Run<span>By</span></a>
+      <div class="nav-links">
+        <a href="/about">About</a>
+        <a href="/#features">Features</a>
+        <a href="/how-it-works">How It Works</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Contact</a>
+        <a href="/pricing" class="nav-cta">Get Started</a>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="referral-header">
+      <div class="header-label">Referral Program</div>
+      <h1>Give $100. Get $100.</h1>
+      <p>Refer a fellow business owner to RunBy. When they subscribe, you both get $100 off your next month.</p>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Share RunBy</h3>
+          <p>Fill out the form below with your friend's info</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>They Sign Up</h3>
+          <p>Your referral gets a 14-day free trial + $100 off first month</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>You Get Rewarded</h3>
+          <p>Once they subscribe, you get $100 credit on your account</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Referral Form -->
+    <section class="referral-form-section">
+      <div class="form-container">
+        <h2>Share RunBy With Your Network</h2>
+        <div class="success-message" id="successMessage">
+          Thank you! Your referral has been sent successfully. We'll get in touch with them soon.
+        </div>
+        <div class="error-message" id="errorMessage">
+          Something went wrong. Please try again or contact us at support@runbyai.co
+        </div>
+        <form id="referralForm">
+          <div class="form-group">
+            <label for="referrerEmail">Your Email</label>
+            <input
+              type="email"
+              id="referrerEmail"
+              name="referrerEmail"
+              placeholder="your@email.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="referralName">Their Name</label>
+            <input
+              type="text"
+              id="referralName"
+              name="referralName"
+              placeholder="John Smith"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="referralEmail">Their Email</label>
+            <input
+              type="email"
+              id="referralEmail"
+              name="referralEmail"
+              placeholder="john@business.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="referralPhone">Their Phone <span class="optional-label">(Optional)</span></label>
+            <input
+              type="tel"
+              id="referralPhone"
+              name="referralPhone"
+              placeholder="(555) 123-4567"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="businessType">Their Business Type</label>
+            <select id="businessType" name="businessType" required>
+              <option value="">Select Business Type</option>
+              <option value="HVAC">HVAC</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Roofing">Roofing</option>
+              <option value="Med Spa">Med Spa</option>
+              <option value="General Contractor">General Contractor</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn">Send Referral</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-items">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How does the $100 credit work?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The $100 credit is applied to your next invoice automatically once your referral completes their first paid month. You'll see the discount reflected on your billing page, and it can be used to offset your monthly subscription fee or other services.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Is there a limit?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No limit! Refer as many fellow business owners as you want. Each successful referral earns you $100 in credits. The more you share RunBy with your network, the more you save on your own subscription.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>When does my referral get their credit?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Your referral receives their $100 discount and 14-day free trial immediately when they sign up using your referral link. The discount is applied to their first paid month. You'll receive your $100 credit once they complete their first paid month.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>What if they don't sign up?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No worries! If your referral doesn't sign up within 30 days, we'll send them a friendly reminder. If they still don't sign up after that, there's no penalty to you. Feel free to refer other business owners anytime.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div>
+          <div class="footer-brand">Run<span>By</span></div>
+        </div>
+        <div>
+          <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/#features">Features</a>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/pricing">Pricing</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-links">
+            <a href="/contact">Contact</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copy">&copy; 2026 RunBy, Inc. All rights reserved. AI Staff That Actually Works.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Handle FAQ toggles
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', function() {
+        const faqItem = this.parentElement;
+        faqItem.classList.toggle('open');
+      });
+    });
+
+    // Handle referral form submission
+    const referralForm = document.getElementById('referralForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    referralForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Collect form data
+      const formData = {
+        referrerEmail: document.getElementById('referrerEmail').value,
+        referralName: document.getElementById('referralName').value,
+        referralEmail: document.getElementById('referralEmail').value,
+        referralPhone: document.getElementById('referralPhone').value || null,
+        businessType: document.getElementById('businessType').value
+      };
+
+      const submitBtn = referralForm.querySelector('.submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        // Try to submit to the API
+        const response = await fetch('https://api.runbyai.co/api/referral', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          successMessage.classList.add('show');
+          errorMessage.classList.remove('show');
+          referralForm.reset();
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            successMessage.classList.remove('show');
+          }, 5000);
+        } else {
+          throw new Error('API request failed');
+        }
+      } catch (error) {
+        // Fallback: Use mailto
+        const mailtoLink = `mailto:referrals@runbyai.co?subject=RunBy%20Referral%20from%20${encodeURIComponent(formData.referrerEmail)}&body=Referral%20Name:%20${encodeURIComponent(formData.referralName)}%0AEmail:%20${encodeURIComponent(formData.referralEmail)}%0APhone:%20${encodeURIComponent(formData.referralPhone || 'Not provided')}%0ABusiness%20Type:%20${encodeURIComponent(formData.businessType)}`;
+        window.location.href = mailtoLink;
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

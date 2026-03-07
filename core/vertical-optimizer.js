@@ -151,7 +151,7 @@ Statuses: ${[...new Set(callData.bookings.map(b => b.status))].join(', ') || 'no
   const missedSummary = `Total missed calls: ${callData.missedCalls.length}
 Reasons: ${[...new Set(callData.missedCalls.map(m => m.reason))].join(', ') || 'none'}`;
 
-  const systemPrompt = `You are an expert AI call center optimization analyst for the "${verticalId}" vertical in a home/business services company. You analyze recent call transcripts and suggest concrete improvements to the AI receptionist's prompt and rules.
+  const systemPrompt = `You are an expert AI call center optimization analyst for the "${verticalId}" vertical in a home/business services company. You analyze recent call transcripts and suggest concrete improvements to the AI staff's prompt and rules.
 
 Your analysis covers ALL of these areas:
 1. MISSED BOOKINGS — Why callers didn't book. Objections, pricing, availability issues.
@@ -414,7 +414,7 @@ async function saveReport(verticalId, callData, analysis, changes) {
         client_id: client.client_id,
         type: 'system',
         severity: 'info',
-        message: `[AI Optimizer] ${changeCount} improvement${changeCount > 1 ? 's' : ''} applied to your ${verticalId} receptionist: ${analysis.analysis_summary}`,
+        message: `[AI Optimizer] ${changeCount} improvement${changeCount > 1 ? 's' : ''} applied to your ${verticalId} staff agent: ${analysis.analysis_summary}`,
       });
     }
   }

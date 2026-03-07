@@ -182,7 +182,7 @@ async function sendOwnerNotification({ customer_name, customer_phone, customer_e
               <h2 style="margin: 0;">New Appointment Booked</h2>
             </div>
             <div style="padding: 25px; background: #f9fafb;">
-              <p>A new appointment was just booked by the AI receptionist:</p>
+              <p>A new appointment was just booked by the AI staff:</p>
               <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 15px 0;">
                 <table style="width: 100%; border-collapse: collapse;">
                   <tr>
@@ -220,7 +220,7 @@ async function sendOwnerNotification({ customer_name, customer_phone, customer_e
                   ${notes ? `<tr><td style="padding: 8px 0; color: #6b7280;"><strong>Notes:</strong></td><td style="padding: 8px 0;">${notes}</td></tr>` : ''}
                 </table>
               </div>
-              <p style="color: #6b7280; font-size: 13px;">This booking was created automatically by the RunBy AI receptionist. The calendar invite is attached — open it to add to your calendar.</p>
+              <p style="color: #6b7280; font-size: 13px;">This booking was created automatically by the RunBy AI staff. The calendar invite is attached — open it to add to your calendar.</p>
             </div>
           </div>
         `,

@@ -1,0 +1,37 @@
+{
+  "executive_summary": "Platform is stable with all 9 verticals healthy, but we're in a quiet period. Yesterday saw 19 calls with a 5.3% booking conversion (1 booking), but zero optimizer activity across all verticals—agents haven't analyzed any calls or made improvements. This is unusual and needs investigation.",
+  "sections": [
+    {
+      "title": "Call Performance",
+      "emoji": "📞",
+      "content": "**19 total calls** yesterday from 1 active client\n- **18 inquiries, 1 booking** (5.3% conversion)\n- **0 missed calls** — perfect answer rate\n- **32s average duration** — quick interactions, likely initial contact\n- No sentiment data captured\n\n**Assessment:** Low volume but clean execution. Conversion rate is acceptable for this call mix, though we need more volume to establish meaningful trends."
+    },
+    {
+      "title": "Agent Performance",
+      "emoji": "🤖",
+      "content": "**⚠️ ZERO optimizer activity across all 9 verticals**\n\n- No calls analyzed\n- No prompt improvements made\n- No optimization reports generated\n\n**This is a red flag.** Either:\n1. Optimizer agents aren't running on schedule\n2. Call data isn't reaching the analyzers\n3. There's a pipeline issue preventing analysis\n\nWith 19 calls yesterday, we should have seen at least one vertical produce an optimization report."
+    },
+    {
+      "title": "System Health",
+      "emoji": "💚",
+      "content": "**All 9 verticals: HEALTHY**\n\n✅ All prompts intact\n✅ All rules files valid JSON\n✅ Template variables preserved\n✅ Backups current\n\n**Verticals:** electrical, general-contractor, hvac, marketing, medspa, onboarding, plumbing, roofing, sales\n\nNo broken files, no corruption, no structural issues. The infrastructure is solid—just not being utilized by optimizers."
+    },
+    {
+      "title": "Email & Invoicing",
+      "emoji": "📧",
+      "content": "**Email:** 0 sent in last 24h\n**Invoices:** 0 total, $0 outstanding\n\n**Status:** Nothing to report. Either we're between billing cycles or this client is on a different payment arrangement."
+    },
+    {
+      "title": "New Verticals",
+      "emoji": "🆕",
+      "content": "**0 new verticals** created in the last 7 days.\n\nOur vertical library remains at 9. No expansion activity from the creator agent."
+    }
+  ],
+  "action_items": [
+    "🔴 URGENT: Investigate why optimizer agents produced zero reports despite 19 calls—check scheduler, data pipeline, and agent logs",
+    "Review single active client account—is this expected volume or are we in a trial/onboarding phase?",
+    "Verify optimizer agent cron jobs are running and have proper access to call data"
+  ],
+  "health_score": 65,
+  "mood": "needs_attention"
+}

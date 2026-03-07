@@ -1,13 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RunBy Dashboard</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RunBy AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0d0d1a;
+            --accent: #e94560;
+            --blue: #4361ee;
+            --white: #ffffff;
+            --gray: #8b8b9e;
+            --text: #c8c8d8;
+            --green: #10b981;
+            --card-bg: #1a1a2e;
+            --border: #2a2a3e;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 20px;
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.15);
+            color: var(--blue);
+            border-left-color: var(--blue);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-section {
+            padding: 16px;
+            background-color: rgba(67, 97, 238, 0.08);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: auto;
+        }
+
+        .help-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .help-link {
+            font-size: 13px;
+            color: var(--blue);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: inline-block;
+        }
+
+        .help-link:hover {
+            color: var(--accent);
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main.expanded {
+            margin-left: 0;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .greeting {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .greeting-text {
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .greeting-name {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .settings-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--gray);
+        }
+
+        .settings-icon:hover {
+            background-color: rgba(67, 97, 238, 0.2);
+            color: var(--blue);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            padding: 32px;
+        }
+
+        /* STATS ROW */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(67, 97, 238, 0.1);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .stat-meta {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .stat-meta.green {
+            color: var(--green);
+        }
+
+        /* CARD STYLES */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .card-link {
+            font-size: 13px;
+            color: var(--blue);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+
+        .card-link:hover {
+            color: var(--accent);
+        }
+
+        /* SCHEDULE */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .schedule-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 3px solid var(--blue);
+            transition: all 0.2s ease;
+        }
+
+        .schedule-item:hover {
+            background-color: rgba(67, 97, 238, 0.08);
+        }
+
+        .schedule-time {
+            font-weight: 600;
+            color: var(--white);
+            min-width: 70px;
+        }
+
+        .schedule-details {
+            flex: 1;
+        }
+
+        .schedule-name {
+            color: var(--white);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .schedule-service {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* ACTIVITY FEED */
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            font-size: 14px;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(233, 69, 96, 0.08);
+        }
+
+        .activity-icon {
+            min-width: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* BRIEFING */
+        .briefing-content {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--green);
+            line-height: 1.6;
+        }
+
+        .briefing-summary {
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .briefing-alert {
+            background-color: rgba(233, 69, 96, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 12px;
+            color: var(--accent);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a52d5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--blue);
+            border: 1px solid var(--blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(67, 97, 238, 0.2);
+        }
+
+        /* QUICK ACTIONS */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .action-btn {
+            padding: 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--white);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            border-color: var(--blue);
+            background-color: rgba(67, 97, 238, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* FOOTER NOTE */
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray);
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            margin-top: 32px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-right: none;
+                border-top: 1px solid var(--border);
+                padding: 16px;
+                transform: translateY(100%);
+                z-index: 200;
+            }
+
+            .sidebar.closed {
+                transform: translateY(100%);
+            }
+
+            .sidebar.open {
+                transform: translateY(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 16px;
+            }
+
+            .stats-row {
+                gap: 16px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .greeting-text {
+                font-size: 14px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .schedule-time {
+                min-width: 60px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar closed" id="sidebar">
+            <a href="#" class="logo">
+                <div class="logo-icon">R</div>
+                <span>RunBy</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📞</span>
+                    <span>Calls</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📅</span>
+                    <span>Bookings</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⭐</span>
+                    <span>Reviews</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Invoices</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="help-section">
+                <div class="help-title">Need Help?</div>
+                <a href="mailto:support@runbyai.co" class="help-link">Contact Support</a>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main" id="main">
+            <!-- TOP BAR -->
+            <div class="topbar">
+                <div class="greeting">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div>
+                        <span class="greeting-text">Good morning, <span class="greeting-name" id="businessName">Elite Plumbing Co.</span></span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="settings-icon" title="Account Settings">
+                        ⚙️
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT AREA -->
+            <div class="content">
+                <!-- STATS ROW -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">Calls Handled</div>
+                        <div class="stat-value">47</div>
+                        <div class="stat-meta green">↑ This week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Appointments Booked</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-meta">Since yesterday</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Revenue Captured</div>
+                        <div class="stat-value">$8,400</div>
+                        <div class="stat-meta green">This week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Time Saved</div>
+                        <div class="stat-value">18 hrs</div>
+                        <div class="stat-meta green">AI handled</div>
+                    </div>
+                </div>
+
+                <!-- TODAY'S SCHEDULE -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Today's Schedule</h2>
+                        <a href="#" class="card-link">View All</a>
+                    </div>
+                    <div class="schedule-list">
+                        <div class="schedule-item">
+                            <div class="schedule-time">9:30 AM</div>
+                            <div class="schedule-details">
+                                <div class="schedule-name">John Anderson</div>
+                                <div class="schedule-service">Emergency Pipe Repair</div>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">11:15 AM</div>
+                            <div class="schedule-details">
+                                <div class="schedule-name">Sarah Mitchell</div>
+                                <div class="schedule-service">Routine Maintenance</div>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">2:00 PM</div>
+                            <div class="schedule-details">
+                                <div class="schedule-name">Michael Chen</div>
+                                <div class="schedule-service">Water Heater Installation</div>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">4:30 PM</div>
+                            <div class="schedule-details">
+                                <div class="schedule-name">Jennifer Lopez</div>
+                                <div class="schedule-service">Drain Cleaning</div>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">5:45 PM</div>
+                            <div class="schedule-details">
+                                <div class="schedule-name">Robert Taylor</div>
+                                <div class="schedule-service">Consultation Call</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECENT ACTIVITY & DAILY BRIEFING -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <!-- RECENT ACTIVITY -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Activity</h2>
+                        </div>
+                        <div class="activity-feed">
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">AI answered call from John D.</div>
+                                    <div class="activity-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Appointment booked for 2:30 PM</div>
+                                    <div class="activity-time">3 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Follow-up email sent to Sarah M.</div>
+                                    <div class="activity-time">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Review request sent to Mike R.</div>
+                                    <div class="activity-time">6 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Invoice reminder sent to ABC Corp</div>
+                                    <div class="activity-time">8 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">AI logged 3 incoming calls</div>
+                                    <div class="activity-time">10 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DAILY BRIEFING -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Daily Briefing</h2>
+                        </div>
+                        <div class="briefing-content">
+                            <div class="briefing-summary">
+                                <strong>Yesterday's Summary:</strong><br>
+                                12 calls handled • 4 appointments booked • 2 follow-ups sent
+                            </div>
+                            <div class="briefing-alert">
+                                <strong>⚠️ Item needs attention:</strong> Emergency call from residential customer requesting same-day service. Scheduled for 9:30 AM.
+                            </div>
+                            <button class="btn btn-secondary" style="width: 100%;">View Full Briefing</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="quick-actions">
+                    <a href="tel:+1234567890" class="action-btn">📞 Call My AI</a>
+                    <a href="#" class="action-btn">📊 View All Calls</a>
+                    <a href="#" class="action-btn">⚙️ Manage Settings</a>
+                </div>
+
+                <!-- FOOTER NOTE -->
+                <div class="footer-note">
+                    Dashboard is updating in real-time. Data shown is from your RunBy AI employee.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const main = document.getElementById('main');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('closed');
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar when clicking on a nav item (mobile)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.add('closed');
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+
+        // Close sidebar when clicking outside (mobile)
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const isSidebarClick = sidebar.contains(event.target);
+                const isMenuToggleClick = menuToggle.contains(event.target);
+
+                if (!isSidebarClick && !isMenuToggleClick && sidebar.classList.contains('open')) {
+                    sidebar.classList.add('closed');
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('closed', 'open');
+            }
+        });
+
+        // Settings icon click handler
+        document.querySelector('.settings-icon').addEventListener('click', function() {
+            alert('Account Settings - Navigate to account configuration');
+        });
+
+        // Nav item active state
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
 </html>

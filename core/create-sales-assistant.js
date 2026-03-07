@@ -7,13 +7,15 @@ const fs = require('fs');
 
 async function createSalesAssistant() {
   const prompt = fs.readFileSync('./verticals/sales/prompt.md', 'utf8');
+  const objections = fs.readFileSync('./verticals/sales/objections.md', 'utf8');
+  const fullPrompt = prompt + '\n\n---\n\n' + objections;
 
   const assistantConfig = {
-    name: 'RunBy Sales Representative',
+    name: 'RunBy Sales & Support Representative',
     model: {
       provider: 'anthropic',
       model: 'claude-sonnet-4-5-20250929',
-      systemPrompt: prompt,
+      systemPrompt: fullPrompt,
       temperature: 0.4,  // Slightly higher for more natural sales conversation
       tools: [
         {
@@ -70,13 +72,76 @@ async function createSalesAssistant() {
             },
           },
         },
+        {
+          type: 'function',
+          function: {
+            name: 'transfer_to_jon',
+            description: 'Transfer the call to Jon (the founder) for a live demo, support escalation, or when the caller requests a human. Use in sales mode for hot leads wanting a live walkthrough, and in support mode for complex issues or complaints.',
+            parameters: {
+              type: 'object',
+              properties: {
+                reason: {
+                  type: 'string',
+                  description: 'Why the call is being transferred (e.g., "Hot prospect wants live demo", "Billing dispute", "Technical issue", "Caller requested human")',
+                },
+                caller_name: {
+                  type: 'string',
+                  description: 'Name of the caller if known',
+                },
+                caller_phone: {
+                  type: 'string',
+                  description: 'Phone number of the caller',
+                },
+                caller_email: {
+                  type: 'string',
+                  description: 'Email address of the caller if known',
+                },
+              },
+              required: ['reason'],
+            },
+          },
+        },
+        {
+          type: 'function',
+          function: {
+            name: 'lookup_client_account',
+            description: 'Look up account details for an existing RunBy client. Use in support mode to retrieve account info, recent bookings, service settings, or contact details. Only works for existing clients.',
+            parameters: {
+              type: 'object',
+              properties: {
+                query_type: {
+                  type: 'string',
+                  description: 'What information to retrieve',
+                  enum: ['account_summary', 'recent_bookings', 'service_settings', 'contact_info'],
+                },
+              },
+              required: ['query_type'],
+            },
+          },
+        },
+        {
+          type: 'function',
+          function: {
+            name: 'check_billing_status',
+            description: 'Check billing and invoice status for an existing RunBy client. Use when the caller asks about payments, invoices, balances, or charges. Only works for existing clients.',
+            parameters: {
+              type: 'object',
+              properties: {
+                include_history: {
+                  type: 'boolean',
+                  description: 'Whether to include recent invoice history (default: false). Set to true when the caller asks about past invoices or payment history.',
+                },
+              },
+            },
+          },
+        },
       ],
     },
     voice: {
       provider: 'vapi',
-      voiceId: 'Mark',  // Male voice — distinct from Emma (client) and Aura (onboarding)
+      voiceId: 'Leo',  // Supported male voice in Vapi's current voice list
     },
-    firstMessage: "Hey there, thanks for calling RunBy! I'm here to tell you about how we can help your business never miss another call. Who am I speaking with today?",
+    firstMessage: "Hey there, thanks for calling RunBy! We help service businesses stop losing revenue and get their time back with AI-powered staff. Who am I speaking with today?",
     endCallMessage: "Thanks so much for your time! If you ever want to learn more, just give us a call back. Have a great day!",
     serverUrl: `${process.env.SERVER_URL}/webhook/vapi`,
     recordingEnabled: true,
@@ -133,11 +198,11 @@ async function createSalesAssistant() {
   }
 
   console.log('\n========================================');
-  console.log('  Sales Assistant Created!');
+  console.log('  Sales & Support Assistant Created!');
   console.log('========================================');
   console.log(`  Assistant ID: ${assistant.id}`);
-  console.log(`  Tool: book_demo`);
-  console.log(`  Voice: Mark`);
+  console.log(`  Tools: book_demo, transfer_to_jon, lookup_client_account, check_billing_status`);
+  console.log(`  Voice: Leo`);
   console.log(`  Max duration: 15 minutes`);
 
   if (!assistantId || assistantId.includes('xxxx')) {

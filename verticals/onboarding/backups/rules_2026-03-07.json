@@ -1,0 +1,23 @@
+{
+  "emergency_keywords": [],
+  "emergency_action": "none",
+  "triage_priority": {
+    "urgent": ["existing client issue", "billing problem", "account locked"],
+    "standard": ["new signup", "onboarding call", "business setup"],
+    "low": ["general inquiry", "pricing question", "feature question"]
+  },
+  "business_rules": {
+    "after_hours_emergencies": false,
+    "booking_buffer_minutes": 0,
+    "max_daily_bookings": 50,
+    "default_appointment_duration_minutes": 15,
+    "required_fields": ["business_name", "vertical_id", "owner_name", "owner_email", "owner_phone", "service_area", "services", "business_hours"],
+    "optional_fields": ["ai_name", "timezone", "preferred_area_code", "emergency_after_hours"],
+    "supported_verticals": ["hvac", "plumbing", "electrical", "roofing", "medspa", "general-contractor", "general"],
+    "defaults": {
+      "ai_name": "Alex",
+      "timezone": "America/New_York",
+      "emergency_after_hours": true
+    }
+  }
+}
