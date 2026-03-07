@@ -112,6 +112,24 @@ app.get('/', (req, res) => {
   res.json({ status: 'RunBy Platform running', timestamp: new Date().toISOString() });
 });
 
+// Stripe config diagnostic (no secrets exposed)
+app.get('/api/stripe-status', (req, res) => {
+  const prices = {
+    starter_monthly: !!process.env.STRIPE_PRICE_STARTER_MONTHLY,
+    starter_annual: !!process.env.STRIPE_PRICE_STARTER_ANNUAL,
+    growth_monthly: !!process.env.STRIPE_PRICE_GROWTH_MONTHLY,
+    growth_annual: !!process.env.STRIPE_PRICE_GROWTH_ANNUAL,
+    pro_monthly: !!process.env.STRIPE_PRICE_PRO_MONTHLY,
+    pro_annual: !!process.env.STRIPE_PRICE_PRO_ANNUAL,
+  };
+  res.json({
+    stripe_key_set: !!process.env.STRIPE_SECRET_KEY,
+    webhook_secret_set: !!process.env.STRIPE_WEBHOOK_SECRET,
+    prices,
+    stripe_module: (() => { try { require.resolve('stripe'); return true; } catch { return false; } })(),
+  });
+});
+
 /**
  * Extract the phone number that was called from a Vapi event
  * Vapi puts this in different places depending on the event type
@@ -567,7 +585,10 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
   } catch (error) {
     console.error('[Stripe] Checkout error:', error.message);
-    res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
+    console.error('[Stripe] Checkout stack:', error.stack);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
+    }
   }
 });
 
